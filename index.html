@@ -37,7 +37,7 @@
             <input type="tel" id="phone-number" placeholder="मोबाईल नंबर (उदा. 9975401708)" maxlength="10">
             
             <div class="password-container">
-                <input type="password" id="password" placeholder="४ अंकी पासवर्ड टाка" maxlength="4">
+                <input type="password" id="password" placeholder="६ अंकी पासवर्ड टाका" maxlength="6">
                 <span class="toggle-password" id="toggle-eye" onclick="togglePasswordVisibility()">👁️‍🗨️</span>
             </div>
 
@@ -112,8 +112,8 @@
                 alert('कृपया १० अंकी वैध मोबाईल नंबर टाका.');
                 return;
             }
-            if (password.length !== 4) {
-                alert('कृपया ४ अंकी पासवर्ड टाका.');
+            if (password.length !== 6) {
+                alert('कृपया ६ अंकी पासवर्ड टाका.');
                 return;
             }
 
@@ -143,7 +143,7 @@
                         showWelcome(phone);
                     })
                     .catch((error) => {
-                        alert('चुकीचा मोबाईल नंबर किंवा ४ अंकी पासवर्ड! कृपया पुन्हा तपासा.');
+                        alert('चुकीचा मोबाईल नंबर किंवा ६ अंकी पासवर्ड! कृपया पुन्हा तपासा.');
                     });
             }
         }
