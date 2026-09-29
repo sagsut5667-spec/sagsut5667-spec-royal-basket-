@@ -49,7 +49,8 @@
         <!-- लॉगिन झाल्यावर दिसणारा डॅशबोर्ड -->
         <div id="welcome-section" style="display: none;">
             <h2>स्वागत आहे! 🎉</h2>
-            <p id="user-display-phone" style="color: #555; font-weight: bold;"></p>
+            <p id="user-display-phone" style="color: #555; font-weight: bold; font-size: 18px;"></p>
+            <p style="color: #666; font-size: 14px;">Royal Basket मध्ये आपले स्वागत आहे.</p>
             <button style="background-color: #dc3545; margin-top: 20px;" onclick="logout()">बाहेर पडा (Logout)</button>
         </div>
     </div>
@@ -117,7 +118,7 @@
                 return;
             }
 
-            // Firebase ईमेल/पासवर्ड पद्धत वापरण्यासाठी मोबाईल नंबरला युनिक ईमेल बनवू
+            // Firebase ईमेल/पासवर्ड पद्धत वापरण्यासाठी मोबाईल नंबरला युनिक ईमेल बनवू (लपलेला राहील)
             const dummyEmail = phone + "@royalbasket.app";
 
             if (isRegisterMode) {
@@ -148,7 +149,7 @@
             }
         }
 
-        // डॅशबोर्ड दाखवणे
+        // डॅशबोर्ड दाखवणे (इथे फक्त मोबाईल नंबर दिसेल, ई-मेल नाही)
         function showWelcome(phone) {
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('welcome-section').style.display = 'block';
