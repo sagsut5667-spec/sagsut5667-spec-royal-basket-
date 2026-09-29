@@ -7,7 +7,7 @@
     <!-- ॲप आयकॉन -->
     <link rel="icon" type="image/png" href="icon.png">
     
-    <!-- Firebase SDK Scripts -->
+    <!-- Firebase SDK Scripts (Compat Versions for Phone Auth) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -37,21 +37,22 @@
 
         <!-- OTP टाकण्याचा फॉर्म (सुरुवातीला लपलेला) -->
         <div id="otp-section" style="display: none;">
-            <p>तुमच्या मोबाईलवर आलेला OTP टाка</p>
+            <p>तुमच्या मोबाईलवर आलेला OTP टाका</p>
             <input type="text" id="otp-code" placeholder="6 अंकी OTP टाका">
             <button onclick="verifyOTP()">OTP तपासा</button>
         </div>
     </div>
 
     <script>
-        // तुमच्या Firebase ची माहिती येथे जोडली जाईल
+        // तुमच्या Firebase ची खरी माहिती
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+          apiKey: "AIzaSyAGIGDVZ2aYmgVywJvoWloa9WFyecjTQe0",
+          authDomain: "royal-basket-30948.firebaseapp.com",
+          projectId: "royal-basket-30948",
+          storageBucket: "royal-basket-30948.firebasestorage.app",
+          messagingSenderId: "416510046272",
+          appId: "1:416510046272:web:a996b3f1de1bea89106fa5",
+          measurementId: "G-PPRMS4GV6E"
         };
 
         // Firebase इनिशियलाइज करणे
@@ -81,7 +82,7 @@
                     document.getElementById('otp-section').style.display = 'block';
                 }).catch((error) => {
                     console.error("OTP पाठवताना एरर आला: ", error);
-                    alert('OTP पाठवला गेला नाही. पुन्हा प्रयत्न करा.');
+                    alert('OTP पाठवला गेला नाही. कृपया नंबर तपासा.');
                 });
         }
 
@@ -91,7 +92,6 @@
             window.confirmationResult.confirm(code).then((result) => {
                 const user = result.user;
                 alert('लॉगिन यशस्वी झाले! स्वागत आहे.');
-                // इथे लॉगिननंतर मुख्य पेजवर रीडायरेक्ट करू शकता
             }).catch((error) => {
                 alert('चुकीचा OTP! कृपया पुन्हा प्रयत्न करा.');
             });
