@@ -5,48 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Royal Basket - ग्रोसरी डिलिव्हरी</title>
     
-    <!-- ॲप आयकॉन (icon.png फाईल लिंक) -->
+    <!-- ॲप आयकॉन -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     
-    <!-- Firebase SDK Scripts (Compat Versions for Phone Auth) -->
+    <!-- Firebase SDK Scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; text-align: center; }
-        .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
-        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
+        .container { max-width: 400px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
+        button { background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
         button:hover { background-color: #218838; }
+        .switch-text { margin-top: 15px; color: #007bff; cursor: pointer; font-size: 14px; }
+        .switch-text:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>Royal Basket लॉगिन</h2>
+        <h2 id="form-title">Royal Basket लॉगिन</h2>
         
-        <!-- मोबाईल नंबर इनपुट फॉर्म -->
-        <div id="phone-login-section">
-            <p>मोबाईल नंबर टाका</p>
-            <input type="text" id="phone-number" placeholder="+91 मोबाईल नंबर (उदा. +919876543210)">
-            <button id="sign-in-button" onclick="sendOTP()">OTP पाठवा</button>
+        <!-- मोबाईल आणि पासवर्ड फॉर्म -->
+        <div id="auth-section">
+            <input type="tel" id="phone-number" placeholder="मोबाईल नंबर (उदा. 9975401708)" maxlength="10">
+            <input type="password" id="password" placeholder="४ अंकी पासवर्ड टाка" maxlength="4">
+            <button id="action-btn" onclick="handleAuth()">լogin / लॉगिन करा</button>
+            
+            <p class="switch-text" id="switch-btn" onclick="toggleMode()">नवीन आहात? नोंदणी (Register) करा</p>
         </div>
 
-        <!-- कॅप्चा व्हेरिफेकेशनसाठी जागा -->
-        <div id="recaptcha-container"></div>
-
-        <!-- OTP टाकण्याचा फॉर्म (सुरुवातीला लपलेला) -->
-        <div id="otp-section" style="display: none;">
-            <p>तुमच्या मोबाईलवर आलेला OTP टाका</p>
-            <input type="text" id="otp-code" placeholder="6 अंकी OTP टाका">
-            <button onclick="verifyOTP()">OTP तपासा</button>
+        <!-- लॉगिन झाल्यावर दिसणारा डॅशबोर्ड -->
+        <div id="welcome-section" style="display: none;">
+            <h2>स्वागत आहे! 🎉</h2>
+            <p id="user-display-phone" style="color: #555; font-weight: bold;"></p>
+            <button style="background-color: #dc3545; margin-top: 20px;" onclick="logout()">बाहेर पडा (Logout)</button>
         </div>
     </div>
 
     <script>
-        // तुमच्या Firebase ची खरी माहिती
+        // तुमच्या Firebase ची माहिती
         const firebaseConfig = {
           apiKey: "AIzaSyAGIGDVZ2aYmgVywJvoWloa9WFyecjTQe0",
           authDomain: "royal-basket-30948.firebaseapp.com",
@@ -61,41 +62,85 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // रीकॅप्चा सेट करणे
-        window.onload = function() {
-            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-                'size': 'invisible',
-                'callback': (response) => {
-                    sendOTP();
-                }
-            });
-        };
+        let isRegisterMode = false;
 
-        // OTP पाठवण्याचे फंक्शन
-        function sendOTP() {
-            const phoneNumber = document.getElementById('phone-number').value;
-            const appVerifier = window.recaptchaVerifier;
+        // लॉगिन किंवा रजिस्टर मोड बदलण्यासाठी
+        function toggleMode() {
+            isRegisterMode = !isRegisterMode;
+            const title = document.getElementById('form-title');
+            const btn = document.getElementById('action-btn');
+            const switchBtn = document.getElementById('switch-btn');
 
-            auth.signInWithPhoneNumber(phoneNumber, appVerifier)
-                .then((confirmationResult) => {
-                    window.confirmationResult = confirmationResult;
-                    alert('OTP यशस्वीरित्या पाठवला आहे!');
-                    document.getElementById('phone-login-section').style.display = 'none';
-                    document.getElementById('otp-section').style.display = 'block';
-                }).catch((error) => {
-                    console.error("OTP पाठवताना एरर आला: ", error);
-                    alert('OTP पाठवला गेला नाही. कृपया नंबर तपासा.');
-                });
+            if (isRegisterMode) {
+                title.innerText = "Royal Basket नोंदणी";
+                btn.innerText = "खाते तयार करा (Register)";
+                switchBtn.innerText = "आधीच खाते आहे? लॉगिन करा";
+            } else {
+                title.innerText = "Royal Basket लॉगिन";
+                btn.innerText = "լogin / लॉगिन करा";
+                switchBtn.innerText = "नवीन आहात? नोंदणी (Register) करा";
+            }
         }
 
-        // OTP व्हेरिफाय करण्याचे फंक्शन
-        function verifyOTP() {
-            const code = document.getElementById('otp-code').value;
-            window.confirmationResult.confirm(code).then((result) => {
-                const user = result.user;
-                alert('लॉगिन यशस्वी झाले! स्वागत आहे.');
-            }).catch((error) => {
-                alert('चुकीचा OTP! कृपया पुन्हा प्रयत्न करा.');
+        // युजरने टाकलाय मोबाईल नंबर, त्याला युनिक ईमेल मध्ये कन्व्हर्ट करू (Firebase साठी)
+        function handleAuth() {
+            const phone = document.getElementById('phone-number').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (phone.length !== 10) {
+                alert('कृपया १० अंकी वैध मोबाईल नंबर टाका.');
+                return;
+            }
+            if (password.length !== 4) {
+                alert('कृपया ४ अंकी पासवर्ड टाका.');
+                return;
+            }
+
+            // Firebase ईमेल/पासवर्ड पद्धत वापरण्यासाठी मोबाईल नंबरला युनिक ईमेल बनवू
+            const dummyEmail = phone + "@royalbasket.app";
+
+            if (isRegisterMode) {
+                // नवीन खाते तयार करणे (Register)
+                auth.createUserWithEmailAndPassword(dummyEmail, password)
+                    .then((userCredential) => {
+                        alert('नोंदणी यशस्वी झाली!');
+                        showWelcome(phone);
+                    })
+                    .catch((error) => {
+                        if (error.code === 'auth/email-already-in-use') {
+                            alert(' हा नंबर आधीपासून नोंदणीकृत आहे. कृपया लॉगिन करा.');
+                            toggleMode();
+                        } else {
+                            alert('एरर आला: ' + error.message);
+                        }
+                    });
+            } else {
+                // लॉगिन करणे (Login)
+                auth.signInWithEmailAndPassword(dummyEmail, password)
+                    .then((userCredential) => {
+                        alert('लॉगिन यशस्वी झाले!');
+                        showWelcome(phone);
+                    })
+                    .catch((error) => {
+                        alert('चुकीचा मोबाईल नंबर किंवा ४ अंकी पासवर्ड! कृपया पुन्हा तपासा.');
+                    });
+            }
+        }
+
+        // डॅशबोर्ड दाखवणे
+        function showWelcome(phone) {
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('welcome-section').style.display = 'block';
+            document.getElementById('user-display-phone').innerText = "मोबाईल नंबर: " + phone;
+        }
+
+        // बाहेर पडणे (Logout)
+        function logout() {
+            auth.signOut().then(() => {
+                document.getElementById('phone-number').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('auth-section').style.display = 'block';
+                document.getElementById('welcome-section').style.display = 'none';
             });
         }
     </script>
