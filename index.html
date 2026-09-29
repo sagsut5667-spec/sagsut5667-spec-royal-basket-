@@ -18,7 +18,10 @@
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; text-align: center; }
         .container { max-width: 400px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
         input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
-        button { background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
+        .password-container { position: relative; width: 94%; margin: auto; }
+        .password-container input { width: 100%; box-sizing: border-box; padding-right: 40px; }
+        .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #666; }
+        button { background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; margin-top: 10px; }
         button:hover { background-color: #218838; }
         .switch-text { margin-top: 15px; color: #007bff; cursor: pointer; font-size: 14px; }
         .switch-text:hover { text-decoration: underline; }
@@ -32,7 +35,12 @@
         <!-- मोबाईल आणि पासवर्ड फॉर्म -->
         <div id="auth-section">
             <input type="tel" id="phone-number" placeholder="मोबाईल नंबर (उदा. 9975401708)" maxlength="10">
-            <input type="password" id="password" placeholder="४ अंकी पासवर्ड टाка" maxlength="4">
+            
+            <div class="password-container">
+                <input type="password" id="password" placeholder="४ अंकी पासवर्ड टाка" maxlength="4">
+                <span class="toggle-password" id="toggle-eye" onclick="togglePasswordVisibility()">👁️‍🗨️</span>
+            </div>
+
             <button id="action-btn" onclick="handleAuth()">լogin / लॉगिन करा</button>
             
             <p class="switch-text" id="switch-btn" onclick="toggleMode()">नवीन आहात? नोंदणी (Register) करा</p>
@@ -63,6 +71,19 @@
         const auth = firebase.auth();
 
         let isRegisterMode = false;
+
+        // पासवर्ड पाहण्यासाठी किंवा लपवण्यासाठी फंक्शन
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('toggle-eye');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.innerText = '👁️';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.innerText = '👁️‍🗨️';
+            }
+        }
 
         // लॉगिन किंवा रजिस्टर मोड बदलण्यासाठी
         function toggleMode() {
@@ -108,7 +129,7 @@
                     })
                     .catch((error) => {
                         if (error.code === 'auth/email-already-in-use') {
-                            alert(' हा नंबर आधीपासून नोंदणीकृत आहे. कृपया लॉगिन करा.');
+                            alert('हा नंबर आधीपासून नोंदणीकृत आहे. कृपया लॉगिन करा.');
                             toggleMode();
                         } else {
                             alert('एरर आला: ' + error.message);
