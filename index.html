@@ -61,6 +61,36 @@
             border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold;
         }
 
+        /* Toast Notification (Pop-up ऐवजी खाली दिसणारा मेसेज) */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 12px;
+            position: fixed;
+            z-index: 2000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2s;
+        }
+        @keyframes fadein {
+            from { bottom: 0; opacity: 0; }
+            to { bottom: 30px; opacity: 1; }
+        }
+        @keyframes fadeout {
+            from { bottom: 30px; opacity: 1; }
+            to { bottom: 0; opacity: 0; }
+        }
+
         /* Modals (Popup) */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -115,6 +145,9 @@
 
     <!-- प्रॉडक्ट लिस्ट -->
     <div class="product-container" id="product-grid"></div>
+
+    <!-- टॅस्ट नोटिफिकेशन (Pop-up ऐवजी खाली दिसणारा मेसेज) -->
+    <div id="toast">प्रॉडक्ट बास्केटमध्ये जोडले!</div>
 
     <!-- कार्ट / बिल मॉडेल (Popup) -->
     <div id="cart-modal" class="modal">
@@ -241,7 +274,16 @@
             const product = allStoreProducts.find(item => item.id === id);
             cart.push(product);
             document.getElementById('cart-count').innerText = cart.length;
-            alert(product.name + ' बास्केटमध्ये जोडले!');
+            
+            // ॲलर्ट ऐवजी स्क्रीनच्या खाली छोटा मेसेज दाखवणारी फंक्शन
+            showToast(product.name + ' बास्केटमध्ये जोडले!');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 2500);
         }
 
         function openCart() {
@@ -271,7 +313,6 @@
                 `;
             });
 
-            // किमान ५०० रुपये नियम
             if (subtotal < 500) {
                 alert('किमान ५०० रुपयांच्या वरच सामान ऑर्डर करू शकता!');
                 return;
@@ -288,11 +329,9 @@
                 extraFee = thousandsCount * 30;
             }
 
-            // डिलिव्हरी टाईम कॅलक्युलेशन लॉजिक (अंतर + मालाचे प्रमाण / आयटमची संख्या)
-            // गृहीत धरा: प्रति किलोमीटर ५ मिनिटे प्रवास + प्रत्येक वस्तूमागे १ मिनिट पॅकिंग/लोडिंग वेळ
             let travelTimeMinutes = distance * 5;
             let itemHandlingMinutes = cart.length * 1;
-            let totalDeliveryMinutes = travelTimeMinutes + itemHandlingMinutes + 15; // १५ मिनिटे बेस तयारी वेळ
+            let totalDeliveryMinutes = travelTimeMinutes + itemHandlingMinutes + 15;
 
             let timeString = "";
             if (totalDeliveryMinutes >= 60) {
