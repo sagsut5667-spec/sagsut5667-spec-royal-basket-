@@ -1,15 +1,15 @@
 {
-  "name": "रॉयल बास्केट",
-  "short_name": "Royal Basket",
+  "name": "रॉयल मॉल बास्केट",
+  "short_name": "रॉयल मॉल",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1a1a2e",
-  "theme_color": "#ff8c00",
+  "background_color": "#2c3e50",
+  "theme_color": "#2c3e50",
   "icons": [
     {
-      "src": "icon.svg",
+      "src": "https://cdn-icons-png.flaticon.com/512/1170/1170576.png",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/png"
     }
   ]
 }
