@@ -9,8 +9,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #2c3e50;
-            color: #ffffff;
+            background-color: #f4f6f7;
+            color: #333333;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -21,10 +21,9 @@
             width: 100%;
             max-width: 480px;
             background: #ffffff;
-            color: #333333;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             text-align: center;
             margin-top: 40px;
         }
@@ -34,48 +33,30 @@
             margin-bottom: 10px;
         }
         h1 {
-            color: #2c3e50;
-            font-size: 22px;
+            color: #27ae60;
+            font-size: 24px;
             margin: 5px 0;
         }
         .subtitle {
             color: #7f8c8d;
-            font-size: 13px;
-            margin-bottom: 25px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        label {
-            font-size: 13px;
-            color: #555;
-            display: block;
-            margin-bottom: 5px;
-        }
-        select, input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
             font-size: 14px;
-            box-sizing: border-box;
-            background: #f9f9f9;
+            margin-bottom: 20px;
         }
-        .login-btn {
+        .shop-btn {
             background: #27ae60;
             color: white;
             border: none;
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border-radius: 8px;
             font-weight: bold;
             font-size: 16px;
             cursor: pointer;
-            margin-top: 10px;
-            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
         }
-        .login-btn:hover {
+        .shop-btn:hover {
             background: #219653;
         }
     </style>
@@ -85,25 +66,11 @@
     <div class="container">
         <img src="https://img.icons8.com/color/96/shopping-cart.png" class="header-icon" alt="Cart Logo">
         <h1>रॉयल मॉल बास्केट</h1>
-        <div class="subtitle">मोबाईल नंबर आणि पासवर्ड टाка</div>
+        <div class="subtitle">आपली घरपोच भाजी व किराणा सेवा</div>
 
-        <div class="form-group">
-            <select id="langSelect">
-                <option value="mr">मराठी (Marathi)</option>
-                <option value="en">English</option>
-                <option value="hi">हिंदी</option>
-            </select>
-        </div>
+        <p style="font-size: 14px; color: #555;">आमच्या मोबाईल ॲपमध्ये आपले स्वागत आहे! ताजे भाजीपाला आणि किराणा सामान घरपोच मागवा.</p>
 
-        <div class="form-group">
-            <input type="text" placeholder="१० अंकी मोबाईल नंबर" maxlength="10">
-        </div>
-
-        <div class="form-group">
-            <input type="password" placeholder="पासवर्ड / OTP">
-        </div>
-
-        <button class="login-btn" onclick="alert('लॉगिन यशस्वी झाले!')">लॉगिन करा</button>
+        <button class="shop-btn" onclick="alert('खरेदी पेज लवकरच सुरू होईल!')">खरेदी सुरू करा</button>
     </div>
 
 </body>
