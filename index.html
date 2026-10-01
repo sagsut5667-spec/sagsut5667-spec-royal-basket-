@@ -26,7 +26,6 @@
             width: 100%; padding: 12px; background: #27ae60; color: white; border: none;
             border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px;
         }
-        .login-box button:hover { background: #219653; }
 
         /* Main App Header */
         header {
@@ -34,7 +33,9 @@
             display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         header h1 { font-size: 18px; }
-        .cart-btn { background: #e74c3c; color: white; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer; border: none; }
+        .header-btns { display: flex; gap: 8px; align-items: center; }
+        .cart-btn { background: #e74c3c; color: white; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; border: none; }
+        .tc-btn { background: #f39c12; color: white; padding: 6px 10px; border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; border: none; }
 
         /* Search Bar */
         .search-container { padding: 15px; background: #fff; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
@@ -59,21 +60,30 @@
             background-color: #ff9900; color: #111; border: none; padding: 8px;
             border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold;
         }
-        .product-card button:hover { background-color: #e68a00; }
 
-        /* Cart Modal / Popup */
-        #cart-modal {
+        /* Modals (Popup) */
+        .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100;
         }
-        .cart-content {
+        .modal-content {
             background: white; width: 90%; max-width: 500px; padding: 20px; border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); max-height: 80vh; overflow-y: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); max-height: 85vh; overflow-y: auto;
         }
-        .cart-content h2 { margin-bottom: 15px; color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        .cart-item { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #f1f1f1; font-size: 15px; }
-        .cart-total { font-size: 18px; font-weight: bold; text-align: right; margin-top: 15px; color: #c0392b; }
-        .close-btn { background: #e74c3c; color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; margin-top: 15px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        .modal-content h2 { margin-bottom: 15px; color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; font-size: 18px; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px solid #f9f9f9; padding-bottom: 5px; }
+        
+        .bill-details { margin-top: 15px; background: #f9f9f9; padding: 10px; border-radius: 6px; font-size: 14px; }
+        .bill-details div { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        
+        .cart-total { font-size: 17px; font-weight: bold; text-align: right; margin-top: 10px; color: #c0392b; border-top: 2px solid #ddd; padding-top: 8px; }
+        
+        .order-btn { background: #27ae60; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; margin-top: 15px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        .close-link { display: block; text-align: center; margin-top: 10px; color: #e74c3c; cursor: pointer; font-size: 14px; }
+        .address-input { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        
+        .tc-box { font-size: 13px; line-height: 1.6; color: #444; }
+        .tc-box ul { padding-left: 20px; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -83,7 +93,7 @@
         <div class="login-box">
             <h2>🛒 रॉयल मॉल बास्केट</h2>
             <p style="margin-bottom: 15px; font-size: 14px; color: #666;">कृपया लॉगीन करा</p>
-            <input type="text" id="mobile-input" placeholder="मोबाईल नंबर टाка">
+            <input type="text" id="mobile-input" placeholder="मोबाईल नंबर टाका">
             <input type="password" id="password-input" placeholder="पासवर्ड (उदा. 6 अंकी)">
             <button onclick="handleLogin()">लॉगीन करा</button>
         </div>
@@ -92,7 +102,10 @@
     <!-- ॲप हेडर -->
     <header>
         <h1>🛒 रॉयल मॉल बास्केट</h1>
-        <button class="cart-btn" onclick="openCart()">बास्केट (<span id="cart-count">0</span>)</button>
+        <div class="header-btns">
+            <button class="tc-btn" onclick="openTC()">अटी व शर्ती</button>
+            <button class="cart-btn" onclick="openCart()">बास्केट (<span id="cart-count">0</span>)</button>
+        </div>
     </header>
 
     <!-- सर्च बॉक्स -->
@@ -104,19 +117,54 @@
     <div class="product-container" id="product-grid"></div>
 
     <!-- कार्ट / बिल मॉडेल (Popup) -->
-    <div id="cart-modal">
-        <div class="cart-content">
-            <h2>तुमची बास्केट (बिल)</h2>
-            <div id="cart-items-list">
-                <!-- निवडलेले प्रॉडक्ट्स येथे दिसतील -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <h2>तुमची बास्केट आणि बिल</h2>
+            
+            <label style="font-size: 13px; font-weight: bold; color: #444;">डिलिव्हरी पत्ता / अंतर (किमी):</label>
+            <input type="text" id="user-address" class="address-input" placeholder="मॉलपासूनचे अंतर (किमी मध्ये, उदा. 5)">
+            
+            <div id="cart-items-list"></div>
+
+            <div class="bill-details">
+                <div><span>मालाची एकूण किंमत:</span> <span id="subtotal-amount">रु. 0</span></div>
+                <div><span>डिलिव्हरी चार्ज (प्रति किमी ८ रु):</span> <span id="delivery-charge">रु. 0</span></div>
+                <div><span>अतिरिक्त चार्ज (१००० च्या पुढे):</span> <span id="extra-charge">रु. 0</span></div>
+                <div><span>अंदाजे डिलिव्हरी वेळ:</span> <span id="delivery-time" style="font-weight: bold; color: #d35400;">-</span></div>
+                <div><span>पेमेंट प्रकार:</span> <span id="payment-mode" style="font-weight: bold; color: #2980b9;">-</span></div>
             </div>
-            <div class="cart-total" id="cart-total-amount">एकूण बिल: रु. 0</div>
-            <button class="close-btn" onclick="closeCart()">बंद करा</button>
+
+            <div class="cart-total" id="cart-total-amount">एकूण अंतिम बिल: रु. 0</div>
+            
+            <button class="order-btn" onclick="confirmOrder()">ऑर्डर कन्फर्म करा</button>
+            <span class="close-link" onclick="closeModal('cart-modal')">बंद करा</span>
+        </div>
+    </div>
+
+    <!-- अटी व शर्ती मॉडेल (Popup) -->
+    <div id="tc-modal" class="modal">
+        <div class="modal-content">
+            <h2>📋 नियम आणि अटी (Terms & Conditions)</h2>
+            <div class="tc-box">
+                <p><b>१. किमान ऑर्डर मर्यादा:</b></p>
+                <ul><li>किमान ५०० रुपयांच्या वरच सामान ऑर्डर करणे अनिवार्य आहे.</li></ul>
+                <p style="margin-top: 8px;"><b>२. डिलिव्हरी चार्ज आणि वेळ:</b></p>
+                <ul>
+                    <li>मॉल लोकेशनपासून डिलिव्हरी अंतराचे प्रति किलोमीटर ८ रुपये चार्ज आकारले जातील.</li>
+                    <li>खरेदीची किंमत १००० रुपयांपेक्षा जास्त झाल्यास, पुढील प्रत्येक हजारामागे ३० रुपये अतिरिक्त चार्ज जोडला जाईल.</li>
+                    <li>डिलिव्हरीचा अंदाजे वेळ हा मॉलपासूनचे अंतर आणि घेतलेल्या मालाच्या प्रमाणावर ठरवला जाईल.</li>
+                </ul>
+                <p style="margin-top: 8px;"><b>३. पेमेंटचे नियम:</b></p>
+                <ul>
+                    <li>२,५०० रुपयांपेक्षा कमी खरेदीवर **COD (कॅश ऑन डिलिव्हरी)** चा पर्याय मिळेल.</li>
+                    <li>२,५०० रुपयांपेक्षा जास्त खरेदीवर **ऑनलाइन पेमेंट** करणे बंधनकारक राहील.</li>
+                </ul>
+            </div>
+            <button class="order-btn" onclick="closeModal('tc-modal')" style="background: #2c3e50;">समजले / बंद करा</button>
         </div>
     </div>
 
     <script>
-        // लॉगीन तपासणी फंक्शन
         function handleLogin() {
             const mobile = document.getElementById('mobile-input').value;
             const password = document.getElementById('password-input').value;
@@ -128,7 +176,6 @@
             }
         }
 
-        // सर्व प्रॉडक्ट्सची यादी
         const allStoreProducts = [
             { id: 1, name: "मूग (प्रति किलो)", price: 110 },
             { id: 2, name: "आख्खा मसर (प्रति किलो)", price: 90 },
@@ -163,7 +210,6 @@
 
         let cart = [];
 
-        // स्क्रीनवर प्रॉडक्ट्स दाखवणारे फंक्शन
         function displayProducts(products) {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = "";
@@ -185,14 +231,12 @@
             });
         }
 
-        // सर्च फिल्टर फंक्शन
         function filterProducts() {
             const query = document.getElementById('search-box').value.toLowerCase();
             const filtered = allStoreProducts.filter(item => item.name.toLowerCase().includes(query));
             displayProducts(filtered);
         }
 
-        // बास्केटमध्ये प्रॉडक्ट ॲड करणे
         function addToCart(id) {
             const product = allStoreProducts.find(item => item.id === id);
             cart.push(product);
@@ -200,36 +244,92 @@
             alert(product.name + ' बास्केटमध्ये जोडले!');
         }
 
-        // कार्ट (बिल विंडो) उघडणे
         function openCart() {
             const listContainer = document.getElementById('cart-items-list');
             listContainer.innerHTML = "";
-            let total = 0;
+            let subtotal = 0;
 
             if (cart.length === 0) {
-                listContainer.innerHTML = "<p style='text-align: center; color: #666;'>तुमची बास्केट रिकामी आहे.</p>";
-            } else {
-                cart.forEach((item, index) => {
-                    total += item.price;
-                    listContainer.innerHTML += `
-                        <div class="cart-item">
-                            <span>${index + 1}. ${item.name}</span>
-                            <span>रु. ${item.price}</span>
-                        </div>
-                    `;
-                });
+                listContainer.innerHTML = "<p style='text-align: center; color: #666; padding: 10px;'>तुमची बास्केट रिकामी आहे.</p>";
+                document.getElementById('subtotal-amount').innerText = "रु. 0";
+                document.getElementById('delivery-charge').innerText = "रु. 0";
+                document.getElementById('extra-charge').innerText = "रु. 0";
+                document.getElementById('delivery-time').innerText = "-";
+                document.getElementById('payment-mode').innerText = "-";
+                document.getElementById('cart-total-amount').innerText = "एकूण अंतिम बिल: रु. 0";
+                document.getElementById('cart-modal').style.display = 'flex';
+                return;
             }
 
-            document.getElementById('cart-total-amount').innerText = `एकूण बिल: रु. ${total}`;
+            cart.forEach((item, index) => {
+                subtotal += item.price;
+                listContainer.innerHTML += `
+                    <div class="cart-item">
+                        <span>${index + 1}. ${item.name}</span>
+                        <span>रु. ${item.price}</span>
+                    </div>
+                `;
+            });
+
+            // किमान ५०० रुपये नियम
+            if (subtotal < 500) {
+                alert('किमान ५०० रुपयांच्या वरच सामान ऑर्डर करू शकता!');
+                return;
+            }
+
+            let distanceInput = prompt("कृपया मॉलपासून तुमच्या घराचे अंतर (किलोमीटर मध्ये) टाका:", "3");
+            let distance = parseFloat(distanceInput) || 3; 
+            let deliveryFee = distance * 8;
+
+            let extraFee = 0;
+            if (subtotal > 1000) {
+                let excessAmount = subtotal - 1000;
+                let thousandsCount = Math.ceil(excessAmount / 1000);
+                extraFee = thousandsCount * 30;
+            }
+
+            // डिलिव्हरी टाईम कॅलक्युलेशन लॉजिक (अंतर + मालाचे प्रमाण / आयटमची संख्या)
+            // गृहीत धरा: प्रति किलोमीटर ५ मिनिटे प्रवास + प्रत्येक वस्तूमागे १ मिनिट पॅकिंग/लोडिंग वेळ
+            let travelTimeMinutes = distance * 5;
+            let itemHandlingMinutes = cart.length * 1;
+            let totalDeliveryMinutes = travelTimeMinutes + itemHandlingMinutes + 15; // १५ मिनिटे बेस तयारी वेळ
+
+            let timeString = "";
+            if (totalDeliveryMinutes >= 60) {
+                let hours = (totalDeliveryMinutes / 60).toFixed(1);
+                timeString = `${hours} तास अंदाजे`;
+            } else {
+                timeString = `${totalDeliveryMinutes} मिनिटे अंदाजे`;
+            }
+
+            let grandTotal = subtotal + deliveryFee + extraFee;
+            let paymentType = grandTotal > 2500 ? "ऑनलाइन पेमेंट बंधनकारक" : "कॅश ऑन डिलिव्हरी (COD)";
+
+            document.getElementById('subtotal-amount').innerText = `रु. ${subtotal}`;
+            document.getElementById('delivery-charge').innerText = `रु. ${deliveryFee} (${distance} किमी)`;
+            document.getElementById('extra-charge').innerText = `रु. ${extraFee}`;
+            document.getElementById('delivery-time').innerText = timeString;
+            document.getElementById('payment-mode').innerText = paymentType;
+            document.getElementById('cart-total-amount').innerText = `एकूण अंतिम बिल: रु. ${grandTotal}`;
+            
             document.getElementById('cart-modal').style.display = 'flex';
         }
 
-        // कार्ट बंद करणे
-        function closeCart() {
-            document.getElementById('cart-modal').style.display = 'none';
+        function openTC() {
+            document.getElementById('tc-modal').style.display = 'flex';
         }
 
-        // पहिल्यांदा सर्व प्रॉडक्ट्स लोड करणे
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function confirmOrder() {
+            alert('तुमची ऑर्डर यशस्वीरित्या नोंदवली गेली आहे! धन्यवाद.');
+            cart = [];
+            document.getElementById('cart-count').innerText = '0';
+            closeModal('cart-modal');
+        }
+
         displayProducts(allStoreProducts);
     </script>
 </body>
