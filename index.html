@@ -5,23 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>रॉयल मॉल बास्केट</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; color: #333; }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; }
-        .product-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; }
-        .product-card { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
-        .product-card h3 { font-size: 18px; margin: 10px 0; color: #27ae60; }
-        .product-card p { font-size: 16px; font-weight: bold; color: #e74c3c; }
-        .product-card button { background-color: #27ae60; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 14px; }
-        .product-card button:hover { background-color: #219653; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background-color: #f4f6f8; color: #333; }
+
+        /* Splash Screen (लोगो स्क्रीन) */
+        #splash-screen {
+            position: fixed; width: 100%; height: 100%; background-color: #111;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 999; transition: opacity 0.5s ease;
+        }
+        .logo-circle {
+            width: 180px; height: 180px; border: 4px solid #ff9900; border-radius: 50%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background-color: #1a1a2e; box-shadow: 0 0 20px rgba(255,153,0,0.5);
+        }
+        .logo-text { color: #ff9900; font-size: 18px; font-weight: bold; margin-top: 10px; }
+
+        /* Main App Header */
+        header {
+            background-color: #2c3e50; color: white; padding: 15px; position: sticky; top: 0; z-index: 10;
+            display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        header h1 { font-size: 20px; }
+        .cart-badge { background: #e74c3c; padding: 5px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; }
+
+        /* Search Bar */
+        .search-container { padding: 15px; background: #fff; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .search-container input {
+            width: 100%; max-width: 600px; padding: 12px 15px; font-size: 16px;
+            border: 1px solid #ddd; border-radius: 8px; outline: none;
+        }
+
+        /* Product Grid */
+        .product-container {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px; padding: 15px; max-width: 1200px; margin: 0 auto;
+        }
+        .product-card {
+            background: #fff; padding: 12px; border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08); text-align: center;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .product-card h3 { font-size: 15px; margin-bottom: 8px; color: #2c3e50; }
+        .product-card p { font-size: 15px; font-weight: bold; color: #27ae60; margin-bottom: 10px; }
+        .product-card button {
+            background-color: #ff9900; color: #111; border: none; padding: 8px;
+            border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold;
+        }
+        .product-card button:hover { background-color: #e68a00; }
     </style>
 </head>
 <body>
 
-    <h1>रॉयल मॉल बास्केट - प्रॉडक्ट सूची</h1>
+    <!-- Splash Screen (शुरुवातीचा लोगो) -->
+    <div id="splash-screen">
+        <div class="logo-circle">
+            <!-- कार्ट आयकॉन -->
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#ff9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <div class="logo-text">रॉयल बास्केट</div>
+        </div>
+    </div>
+
+    <!-- ॲप हेडर -->
+    <header>
+        <h1>🛒 रॉयल मॉल बास्केट</h1>
+        <div class="cart-badge" id="cart-count">बास्केट: 0</div>
+    </header>
+
+    <!-- सर्च बॉक्स -->
+    <div class="search-container">
+        <input type="text" id="search-box" placeholder="🔍 डाळी, तांदूळ किंवा गहू शोधा..." onkeyup="filterProducts()">
+    </div>
+
+    <!-- प्रॉडक्ट लिस्ट -->
     <div class="product-container" id="product-grid"></div>
 
     <script>
-        // सर्व प्रॉडक्ट्स आणि किमतींची एकत्रित यादी
+        // सुरुवातीचा स्पॅश स्क्रीन २ सेकंदात गायब होईल
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => splash.style.display = 'none', 500);
+        }, 2000);
+
+        // सर्व प्रॉडक्ट्सची यादी
         const allStoreProducts = [
             { id: 1, name: "मूग (प्रति किलो)", price: 110 },
             { id: 2, name: "आख्खा मसर (प्रति किलो)", price: 90 },
@@ -54,31 +124,46 @@
             { id: 29, name: "सेवन स्टार (प्रति किलो)", price: 65 }
         ];
 
-        // वेबसाईटवर प्रॉडक्ट्स कार्ड स्वरूपात दाखवणारे फंक्शन
-        function displayProducts() {
+        let cartCount = 0;
+
+        // स्क्रीनवर प्रॉडक्ट्स दाखवणारे फंक्शन
+        function displayProducts(products) {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = "";
             
-            allStoreProducts.forEach(item => {
+            if (products.length === 0) {
+                grid.innerHTML = "<p style='grid-column: 1/-1; text-align: center; padding: 20px;'>कोणतेही प्रॉडक्ट सापडले नाही.</p>";
+                return;
+            }
+
+            products.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.innerHTML = `
                     <h3>${item.name}</h3>
-                    <p>किंमत: रु. ${item.price}</p>
-                    <button onclick="addToCart('${item.name}', ${item.price})">बास्केटमध्ये टाका</button>
+                    <p>रु. ${item.price} / किलो</p>
+                    <button onclick="addToCart('${item.name}')">बास्केटमध्ये टाका</button>
                 `;
                 grid.appendChild(card);
             });
         }
 
-        // प्रॉडक्ट बास्केटमध्ये ॲड झाल्यावर मेसेज दाखवणारे फंक्शन
-        function addToCart(name, price) {
-            alert(name + ' (रु. ' + price + ') बास्केटमध्ये यशस्वीरित्या जोडले!');
+        // सर्च फिल्टर फंक्शन
+        function filterProducts() {
+            const query = document.getElementById('search-box').value.toLowerCase();
+            const filtered = allStoreProducts.filter(item => item.name.toLowerCase().includes(query));
+            displayProducts(filtered);
         }
 
-        // पेज लोड झाल्यावर सर्व प्रॉडक्ट्स स्क्रीनवर दिसतील
-        window.onload = displayProducts;
-    </script>
+        // बास्केटमध्ये ॲड करणे
+        function addToCart(name) {
+            cartCount++;
+            document.getElementById('cart-count').innerText = `बास्केट: ${cartCount}`;
+            alert(name + ' बास्केटमध्ये जोडले!');
+        }
 
+        // पहिल्यांदा सर्व प्रॉडक्ट्स लोड करणे
+        displayProducts(allStoreProducts);
+    </script>
 </body>
 </html>
