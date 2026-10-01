@@ -8,26 +8,33 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         body { background-color: #f4f6f8; color: #333; }
 
-        /* Splash Screen (लोगो स्क्रीन) */
-        #splash-screen {
-            position: fixed; width: 100%; height: 100%; background-color: #111;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 999; transition: opacity 0.5s ease;
+        /* Login Screen */
+        #login-screen {
+            position: fixed; width: 100%; height: 100%; background: #2c3e50;
+            display: flex; justify-content: center; align-items: center; z-index: 1000;
         }
-        .logo-circle {
-            width: 180px; height: 180px; border: 4px solid #ff9900; border-radius: 50%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background-color: #1a1a2e; box-shadow: 0 0 20px rgba(255,153,0,0.5);
+        .login-box {
+            background: #fff; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-align: center;
         }
-        .logo-text { color: #ff9900; font-size: 18px; font-weight: bold; margin-top: 10px; }
+        .login-box h2 { margin-bottom: 20px; color: #2c3e50; }
+        .login-box input {
+            width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd;
+            border-radius: 6px; font-size: 16px; outline: none;
+        }
+        .login-box button {
+            width: 100%; padding: 12px; background: #27ae60; color: white; border: none;
+            border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px;
+        }
+        .login-box button:hover { background: #219653; }
 
         /* Main App Header */
         header {
             background-color: #2c3e50; color: white; padding: 15px; position: sticky; top: 0; z-index: 10;
             display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        header h1 { font-size: 20px; }
-        .cart-badge { background: #e74c3c; padding: 5px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; }
+        header h1 { font-size: 18px; }
+        .cart-btn { background: #e74c3c; color: white; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer; border: none; }
 
         /* Search Bar */
         .search-container { padding: 15px; background: #fff; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
@@ -53,26 +60,39 @@
             border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold;
         }
         .product-card button:hover { background-color: #e68a00; }
+
+        /* Cart Modal / Popup */
+        #cart-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100;
+        }
+        .cart-content {
+            background: white; width: 90%; max-width: 500px; padding: 20px; border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); max-height: 80vh; overflow-y: auto;
+        }
+        .cart-content h2 { margin-bottom: 15px; color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #f1f1f1; font-size: 15px; }
+        .cart-total { font-size: 18px; font-weight: bold; text-align: right; margin-top: 15px; color: #c0392b; }
+        .close-btn { background: #e74c3c; color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; margin-top: 15px; cursor: pointer; font-size: 16px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- Splash Screen (शुरुवातीचा लोगो) -->
-    <div id="splash-screen">
-        <div class="logo-circle">
-            <!-- कार्ट आयकॉन -->
-            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#ff9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-            </svg>
-            <div class="logo-text">रॉयल बास्केट</div>
+    <!-- लॉगीन स्क्रीन -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>🛒 रॉयल मॉल बास्केट</h2>
+            <p style="margin-bottom: 15px; font-size: 14px; color: #666;">कृपया लॉगीन करा</p>
+            <input type="text" id="mobile-input" placeholder="मोबाईल नंबर टाка">
+            <input type="password" id="password-input" placeholder="पासवर्ड (उदा. 6 अंकी)">
+            <button onclick="handleLogin()">लॉगीन करा</button>
         </div>
     </div>
 
     <!-- ॲप हेडर -->
     <header>
         <h1>🛒 रॉयल मॉल बास्केट</h1>
-        <div class="cart-badge" id="cart-count">बास्केट: 0</div>
+        <button class="cart-btn" onclick="openCart()">बास्केट (<span id="cart-count">0</span>)</button>
     </header>
 
     <!-- सर्च बॉक्स -->
@@ -83,13 +103,30 @@
     <!-- प्रॉडक्ट लिस्ट -->
     <div class="product-container" id="product-grid"></div>
 
+    <!-- कार्ट / बिल मॉडेल (Popup) -->
+    <div id="cart-modal">
+        <div class="cart-content">
+            <h2>तुमची बास्केट (बिल)</h2>
+            <div id="cart-items-list">
+                <!-- निवडलेले प्रॉडक्ट्स येथे दिसतील -->
+            </div>
+            <div class="cart-total" id="cart-total-amount">एकूण बिल: रु. 0</div>
+            <button class="close-btn" onclick="closeCart()">बंद करा</button>
+        </div>
+    </div>
+
     <script>
-        // सुरुवातीचा स्पॅश स्क्रीन २ सेकंदात गायब होईल
-        setTimeout(() => {
-            const splash = document.getElementById('splash-screen');
-            splash.style.opacity = '0';
-            setTimeout(() => splash.style.display = 'none', 500);
-        }, 2000);
+        // लॉगीन तपासणी फंक्शन
+        function handleLogin() {
+            const mobile = document.getElementById('mobile-input').value;
+            const password = document.getElementById('password-input').value;
+
+            if (mobile.length === 10 && password.length >= 4) {
+                document.getElementById('login-screen').style.display = 'none';
+            } else {
+                alert('कृपया १० अंकी मोबाईल नंबर आणि वैध पासवर्ड टाका!');
+            }
+        }
 
         // सर्व प्रॉडक्ट्सची यादी
         const allStoreProducts = [
@@ -124,7 +161,7 @@
             { id: 29, name: "सेवन स्टार (प्रति किलो)", price: 65 }
         ];
 
-        let cartCount = 0;
+        let cart = [];
 
         // स्क्रीनवर प्रॉडक्ट्स दाखवणारे फंक्शन
         function displayProducts(products) {
@@ -142,7 +179,7 @@
                 card.innerHTML = `
                     <h3>${item.name}</h3>
                     <p>रु. ${item.price} / किलो</p>
-                    <button onclick="addToCart('${item.name}')">बास्केटमध्ये टाका</button>
+                    <button onclick="addToCart(${item.id})">बास्केटमध्ये टाका</button>
                 `;
                 grid.appendChild(card);
             });
@@ -155,11 +192,41 @@
             displayProducts(filtered);
         }
 
-        // बास्केटमध्ये ॲड करणे
-        function addToCart(name) {
-            cartCount++;
-            document.getElementById('cart-count').innerText = `बास्केट: ${cartCount}`;
-            alert(name + ' बास्केटमध्ये जोडले!');
+        // बास्केटमध्ये प्रॉडक्ट ॲड करणे
+        function addToCart(id) {
+            const product = allStoreProducts.find(item => item.id === id);
+            cart.push(product);
+            document.getElementById('cart-count').innerText = cart.length;
+            alert(product.name + ' बास्केटमध्ये जोडले!');
+        }
+
+        // कार्ट (बिल विंडो) उघडणे
+        function openCart() {
+            const listContainer = document.getElementById('cart-items-list');
+            listContainer.innerHTML = "";
+            let total = 0;
+
+            if (cart.length === 0) {
+                listContainer.innerHTML = "<p style='text-align: center; color: #666;'>तुमची बास्केट रिकामी आहे.</p>";
+            } else {
+                cart.forEach((item, index) => {
+                    total += item.price;
+                    listContainer.innerHTML += `
+                        <div class="cart-item">
+                            <span>${index + 1}. ${item.name}</span>
+                            <span>रु. ${item.price}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('cart-total-amount').innerText = `एकूण बिल: रु. ${total}`;
+            document.getElementById('cart-modal').style.display = 'flex';
+        }
+
+        // कार्ट बंद करणे
+        function closeCart() {
+            document.getElementById('cart-modal').style.display = 'none';
         }
 
         // पहिल्यांदा सर्व प्रॉडक्ट्स लोड करणे
