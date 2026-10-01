@@ -1,14 +1,14 @@
 {
   "name": "रॉयल मॉल बास्केट",
   "short_name": "रॉयल मॉल",
-  "start_url": "/",
+  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#2c3e50",
-  "theme_color": "#2c3e50",
+  "background_color": "#ffffff",
+  "theme_color": "#28a745",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/1170/1170576.png",
-      "sizes": "512x512",
+      "src": "https://img.icons8.com/color/96/shopping-cart.png",
+      "sizes": "96x96",
       "type": "image/png"
     }
   ]
