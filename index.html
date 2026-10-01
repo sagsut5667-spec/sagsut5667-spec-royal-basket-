@@ -204,7 +204,6 @@
                 return;
             }
 
-            // वेळ तपासणी (सकाळी 10 ते दुपारी 4 म्हणजेच 10 ते 16 वाजेपर्यंत)
             const currentHour = new Date().getHours();
             let timeStatus = (currentHour >= 10 && currentHour < 16) ? "आजची डिलिव्हरी" : "उद्याची डिलिव्हरी (Next-Day Delivery)";
 
@@ -214,7 +213,6 @@
             });
             orderText += `-------------------%0A*एकूण रक्कम: ₹${total}*`;
 
-            // WhatsApp वर पाठवणे
             let whatsappUrl = `https://wa.me/919975401708?text=${orderText}`;
             window.open(whatsappUrl, '_blank');
         }
