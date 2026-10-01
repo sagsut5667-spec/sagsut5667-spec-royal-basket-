@@ -5,308 +5,409 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>रॉयल मॉल बास्केट | Royal Mall Basket</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <meta name="theme-color" content="#2c3e50">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f7;
-            margin: 0;
-            padding: 0;
-            color: #333;
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #27ae60;
+            --bg-color: #f4f6f7;
+            --card-bg: #ffffff;
+            --text-color: #333333;
         }
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 12px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .basket-badge {
-            background-color: #e74c3c;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-        .container {
-            padding: 15px;
-            max-width: 600px;
-            margin: auto;
-        }
-        /* सण शुभेच्छा बॅनर्स (टर्म्सच्या आधी दिसणार) */
-        .festival-banner {
-            background: linear-gradient(135deg, #ff7e5f, #feb47b);
-            color: #fff;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        /* नियम आणि अटी बॉक्स */
-        .terms-box {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        /* मुख्य दुकान / प्रॉडक्ट्स सेक्शन */
-        .shop-section {
-            display: none;
-        }
-        .search-input {
-            width: 100%;
-            padding: 12px 15px;
-            font-size: 16px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            outline: none;
-            box-sizing: border-box;
-            margin-bottom: 15px;
-            background: #fff;
-        }
-        .products-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .product-card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .product-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .product-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        .product-price {
-            color: #27ae60;
-            font-weight: bold;
-            font-size: 15px;
-        }
-        .controls-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .weight-select {
-            flex: 1.2;
-            padding: 8px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            background: #fff;
-        }
-        .qty-input {
-            width: 55px;
-            padding: 8px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            text-align: center;
-        }
-        .add-btn {
-            background-color: #f39c12;
-            color: white;
-            border: none;
-            padding: 9px 14px;
-            font-size: 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-        .add-btn:hover {
-            background-color: #d68910;
-        }
-        .btn {
-            background-color: #27ae60;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 70px; }
+        header { background-color: var(--primary-color); color: white; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .logo-area { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: bold; }
+        .header-controls { display: flex; gap: 8px; align-items: center; }
+        .lang-select { background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 5px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; }
+        .lang-select option { background: var(--primary-color); color: white; }
+        
+        .nav-buttons { display: flex; gap: 6px; }
+        .btn-nav { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
+        .btn-nav.active { background: var(--accent-color); }
+        
+        .container { padding: 15px; max-width: 800px; margin: auto; }
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        /* Terms Screen */
+        .terms-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .terms-card h2 { margin-bottom: 15px; color: var(--primary-color); font-size: 1.3rem; }
+        .terms-list { margin-bottom: 20px; padding-left: 20px; line-height: 1.6; font-size: 0.95rem; }
+        .terms-list li { margin-bottom: 10px; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-weight: bold; }
+        .btn-primary { background: var(--accent-color); color: white; border: none; width: 100%; padding: 12px; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; text-align: center; }
+
+        /* Shop Screen */
+        .search-box { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; margin-bottom: 15px; font-size: 1rem; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+        .product-card { background: var(--card-bg); border-radius: 8px; padding: 12px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: space-between; }
+        .product-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 5px; }
+        .product-price { color: #e74c3c; font-weight: bold; margin-bottom: 10px; font-size: 0.9rem; }
+        .btn-add { background: #f39c12; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 0.85rem; }
+        .btn-add:active { transform: scale(0.98); }
+
+        /* Basket Screen */
+        .basket-form { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem; }
+        .btn-gps { background: #3498db; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-top: 5px; width: 100%; }
+        .bill-summary { background: #f8f9f9; padding: 10px; border-radius: 6px; margin: 15px 0; font-size: 0.9rem; }
+        .bill-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .bill-total { font-weight: bold; font-size: 1.1rem; color: var(--primary-color); border-top: 1px dashed #ccc; padding-top: 6px; }
+        .whatsapp-btn { background: #25D366; color: white; width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; display: none; z-index: 2000; }
     </style>
 </head>
 <body>
 
     <header>
-        <span>रॉयल मॉल बास्केट 🛒</span>
-        <span class="basket-badge" id="basketCount">बास्केट: 0</span>
+        <div class="logo-area" id="appTitle">🛒 रॉयल मॉल बास्केट</div>
+        <div class="header-controls">
+            <select id="langSwitcher" class="lang-select" onchange="changeLanguage()">
+                <option value="mr">मराठी</option>
+                <option value="en">English</option>
+            </select>
+            <div class="nav-buttons" id="navButtons" style="display: none;">
+                <button class="btn-nav active" id="navShopBtn" onclick="switchTab('shop')">यादी</button>
+                <button class="btn-nav" id="navBasketBtn" onclick="switchTab('basket')">बास्केट (<span id="cartCount">0</span>)</button>
+            </div>
+        </div>
     </header>
 
     <div class="container">
-        
-        <!-- १. टर्म्स आणि कंडिशनच्या आधी सण शुभेच्छा आणि नियम -->
-        <div id="termsSection" class="terms-box">
-            <div class="festival-banner">
-                <h2 style="margin: 0 0 5px 0; font-size: 18px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">✨ दसरा व दिवाळीच्या हार्दिक शुभेच्छा! 🪔</h2>
-                <p style="margin: 0; font-size: 12px; font-weight: bold; line-height: 1.4;">
-                    रॉयल मॉल बास्केट परिवाराकडून आपणास व आपल्या कुटुंबास सुख-समृद्धी लाभो!
-                </p>
-            </div>
-
-            <h3 style="color: #2c3e50; font-size: 16px;">नियम आणि अटी (Terms & Conditions)</h3>
-            <ul style="font-size: 13px; line-height: 1.6; padding-left: 20px; color: #555;">
-                <li>किमान ऑर्डर मर्यादा: किमान ५०० रुपयांच्या दरम्यान सामानाची ऑर्डर करावी लागेल.</li>
-                <li>ऑर्डरची वेळ: सकाळी १०:०० ते दुपारी ४:०० वाजेपर्यंत, या वेळेत ऑर्डर दिल्यास दिवशी डिलिव्हरी केली जाईल.</li>
-                <li>डिलिव्हरी व कॅन्सलेशन्स दर: पार्सपॉल्यावर ऑर्डर कॅन्सल केल्यास नियमानुसार चार्ज लागेल.</li>
-            </ul>
-            <label style="display: flex; align-items: center; gap: 10px; margin-top: 15px; font-size: 13px; cursor: pointer;">
-                <input type="checkbox" id="agreeCheck" style="width: 18px; height: 18px;"> मी वरील सर्व नियम आणि अटी मान्य केल्या आहेत.
-            </label>
-            <button class="btn" onclick="acceptTerms()">पुढे जा (Continue)</button>
-        </div>
-
-        <!-- २. टर्म्स स्वीकारल्यानंतर दिसणारे प्रॉडक्ट्स आणि सर्च बार -->
-        <div id="shopSection" class="shop-section">
-            <!-- सर्च बार -->
-            <input type="text" id="searchInput" class="search-input" placeholder="🔍 मूग, डाळी, तांदूळ किंवा गहू शोधा..." onkeyup="filterProducts()">
-
-            <!-- उत्पादनांची यादी (जुन्या डिझाइनप्रमाणे कार्ड स्वरूपात) -->
-            <div class="products-grid" id="productList">
-                <div class="product-card" data-name="मूग प्रति किलो">
-                    <div class="product-top">
-                        <span class="product-name">मूग (प्रति किलो)</span>
-                        <span class="product-price">रु. 110 / किलो</span>
-                    </div>
-                    <div class="controls-row">
-                        <select class="weight-select">
-                            <option value="250">२५० ग्रॅम</option>
-                            <option value="500">५०० ग्रॅम</option>
-                            <option value="1000" selected>१ किलो</option>
-                            <option value="2000">२ किलो</option>
-                            <option value="5000">५ किलो</option>
-                            <option value="10000">१० किलो</option>
-                            <option value="25000">२५ किलो</option>
-                        </select>
-                        <input type="number" class="qty-input" min="1" value="1">
-                        <button class="add-btn" onclick="addToCart(this)">बास्केटमध्ये टाका</button>
-                    </div>
+        <!-- 1. Terms Screen -->
+        <div id="termsScreen" class="screen active">
+            <div class="terms-card">
+                <h2 id="tHeading">नियम आणि अटी (Terms & Conditions)</h2>
+                <ul class="terms-list" id="tList">
+                    <li><strong>किमान ऑर्डर मर्यादा:</strong> किमान ५०० रुपयांच्या वरच सामान ऑर्डर करणे अनिवार्य आहे.</li>
+                    <li><strong>ऑर्डरची वेळ:</strong> सकाळी १०:०० ते दुपारी ४:०० वाजेपर्यंत. या वेळेतच ऑर्डर दुसरा दिवशी डिलिव्हरी केली जाईल.</li>
+                    <li><strong>डिलिव्हरी व कॅन्सलेशन्स दर:</strong> पॉवरोपॉलायवर ऑर्डर कॅन्सल केल्यास नियमांनुसार चार्जेस लागतील.</li>
+                </ul>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="acceptTerms" style="width: 20px; height: 20px;">
+                    <label for="acceptTerms" id="tAcceptText" style="font-size: 0.95rem; cursor: pointer;">मी वरील सर्व नियम आणि अटी मान्य केल्या आहेत.</label>
                 </div>
-
-                <div class="product-card" data-name="आख्खा मसर प्रति किलो">
-                    <div class="product-top">
-                        <span class="product-name">आख्खा मसर (प्रति किलो)</span>
-                        <span class="product-price">रु. 90 / किलो</span>
-                    </div>
-                    <div class="controls-row">
-                        <select class="weight-select">
-                            <option value="250">२५० ग्रॅम</option>
-                            <option value="500">५०० ग्रॅम</option>
-                            <option value="1000" selected>१ किलो</option>
-                            <option value="2000">२ किलो</option>
-                            <option value="5000">५ किलो</option>
-                            <option value="10000">१० किलो</option>
-                            <option value="25000">२५ किलो</option>
-                        </select>
-                        <input type="number" class="qty-input" min="1" value="1">
-                        <button class="add-btn" onclick="addToCart(this)">बास्केटमध्ये टाका</button>
-                    </div>
-                </div>
-
-                <div class="product-card" data-name="पिळी हरभरा डाळ प्रति किलो">
-                    <div class="product-top">
-                        <span class="product-name">पिळी हरभरा डाळ (प्रति किलो)</span>
-                        <span class="product-price">रु. 94 / किलो</span>
-                    </div>
-                    <div class="controls-row">
-                        <select class="weight-select">
-                            <option value="250">२५० ग्रॅम</option>
-                            <option value="500">५०० ग्रॅम</option>
-                            <option value="1000" selected>१ किलो</option>
-                            <option value="2000">२ किलो</option>
-                            <option value="5000">५ किलो</option>
-                            <option value="10000">१० किलो</option>
-                            <option value="25000">२५ किलो</option>
-                        </select>
-                        <input type="number" class="qty-input" min="1" value="1">
-                        <button class="add-btn" onclick="addToCart(this)">बास्केटमध्ये टाका</button>
-                    </div>
-                </div>
-
-                <div class="product-card" data-name="उडीद डाळ प्रति किलो">
-                    <div class="product-top">
-                        <span class="product-name">उडीद डाळ (प्रति किलो)</span>
-                        <span class="product-price">रु. 138 / किलो</span>
-                    </div>
-                    <div class="controls-row">
-                        <select class="weight-select">
-                            <option value="250">२५० ग्रॅम</option>
-                            <option value="500">५०० ग्रॅम</option>
-                            <option value="1000" selected>१ किलो</option>
-                            <option value="2000">२ किलो</option>
-                            <option value="5000">५ किलो</option>
-                            <option value="10000">१० किलो</option>
-                            <option value="25000">२५ किलो</option>
-                        </select>
-                        <input type="number" class="qty-input" min="1" value="1">
-                        <button class="add-btn" onclick="addToCart(this)">बास्केटमध्ये टाका</button>
-                    </div>
-                </div>
+                <button class="btn-primary" id="tBtn" onclick="proceedToShop()">पुढे जा (Continue)</button>
             </div>
         </div>
 
+        <!-- 2. Shop Screen -->
+        <div id="shopScreen" class="screen">
+            <input type="text" id="searchProduct" class="search-box" placeholder="धान्य, तांदूळ किंवा कांदा शोधा..." onkeyup="filterProducts()">
+            <div class="products-grid" id="productsGrid"></div>
+        </div>
+
+        <!-- 3. Basket Screen -->
+        <div id="basketScreen" class="screen">
+            <div class="basket-form">
+                <h3 id="bTitle" style="margin-bottom: 15px; color: var(--primary-color);">तुमची बास्केट आणि बिल</h3>
+                
+                <div class="form-group">
+                    <label id="lName">ग्राहकाचे नाव:</label>
+                    <input type="text" id="custName" placeholder="तुमचे पूर्ण नाव टाका">
+                </div>
+
+                <div class="form-group">
+                    <label id="lPhone">मोबाईल नंबर (१० अंकी):</label>
+                    <input type="number" id="custPhone" placeholder="मोबाईल नंबर टाका">
+                </div>
+
+                <div class="form-group">
+                    <label id="lDist">रॅाल्यापासूनचे अंतर (किमी):</label>
+                    <input type="number" id="distanceKm" value="3" onchange="calculateBill()">
+                </div>
+
+                <div class="form-group">
+                    <label id="lAddr">डिलिव्हरीचा पूर्ण पत्ता:</label>
+                    <input type="text" id="custAddress" placeholder="घर नं, गल्ली, परिसर...">
+                </div>
+
+                <button class="btn-gps" id="btnGps" onclick="getLocationGPS()">📍 माझे लाईव्ह लोकेशन (GPS) जोडा</button>
+
+                <div class="form-group" style="margin-top: 12px;">
+                    <label id="lPay">पेमेंटचा प्रकार (Payment Method):</label>
+                    <select id="payMethod">
+                        <option value="Cash on Delivery (COD)">कॅश ऑन डिलिव्हरी (COD - रोक रक्कम)</option>
+                        <option value="Online Payment">ऑनलाइन पेमेंट (Online Payment)</option>
+                    </select>
+                </div>
+
+                <div class="bill-summary" id="billSummaryContainer"></div>
+
+                <button class="whatsapp-btn" id="btnWhatsapp" onclick="sendToWhatsApp()">
+                    📦 ऑर्डर कन्फर्म करा आणि WhatsApp वर पाठवा
+                </button>
+            </div>
+        </div>
     </div>
 
-    <script>
-        let cartCount = 0;
+    <div id="toast" class="toast">अपडेट केले</div>
 
-        function acceptTerms() {
-            let checkbox = document.getElementById('agreeCheck');
-            if (checkbox.checked) {
-                document.getElementById('termsSection').style.display = 'none';
-                document.getElementById('shopSection').style.display = 'block';
-            } else {
-                alert('कृपया पुढे जाण्यापूर्वी नियम आणि अटी मान्य करा बॉक्सवर क्लिक करा.');
+    <script>
+        const translations = {
+            mr: {
+                appTitle: "🛒 रॉयल मॉल बास्केट",
+                navShop: "यादी",
+                navBasket: "बास्केट",
+                tHeading: "नियम आणि अटी (Terms & Conditions)",
+                tList: `
+                    <li><strong>किमान ऑर्डर मर्यादा:</strong> किमान ५०० रुपयांच्या वरच सामान ऑर्डर करणे अनिवार्य आहे.</li>
+                    <li><strong>ऑर्डरची वेळ:</strong> सकाळी १०:०० ते दुपारी ४:०० वाजेपर्यंत. या वेळेतच ऑर्डर दुसरा दिवशी डिलिव्हरी केली जाईल.</li>
+                    <li><strong>डिलिव्हरी व कॅन्सलेशन्स दर:</strong> पॉवरोपॉलायवर ऑर्डर कॅन्सल केल्यास नियमांनुसार चार्जेस लागतील.</li>
+                `,
+                tAcceptText: "मी वरील सर्व नियम आणि अटी मान्य केल्या आहेत.",
+                tBtn: "पुढे जा (Continue)",
+                searchPlaceholder: "धान्य, तांदूळ किंवा कांदा शोधा...",
+                addBtn: "बास्केटमध्ये टाका",
+                bTitle: "तुमची बास्केट आणि बिल",
+                lName: "ग्राहकाचे नाव:",
+                lPhone: "मोबाईल नंबर (१० अंकी):",
+                lDist: "रॅाल्यापासूनचे अंतर (किमी):",
+                lAddr: "डिलिव्हरीचा पूर्ण पत्ता:",
+                btnGps: "📍 माझे लाईव्ह लोकेशन (GPS) जोडा",
+                lPay: "पेमेंटचा प्रकार (Payment Method):",
+                btnWhatsapp: "📦 ऑर्डर कन्फर्म करा आणि WhatsApp वर पाठवा",
+                toastAdd: "बास्केटमध्ये ॲड केले!",
+                toastGps: "लोकेशन यशस्वीरीत्या जोडले!",
+                errTerms: "कृपया पुढे जाण्यापूर्वी नियम व अटी मान्य करा.",
+                errForm: "कृपया ग्राहकाचे नाव, १० अंकी मोबाईल नंबर आणि पत्ता पूर्ण भरा.",
+                errMin: "किमान ऑर्डर मर्यादा ५०० रुपये आहे. कृपया आणखी जिन्नस जोडा."
+            },
+            en: {
+                appTitle: "🛒 Royal Mall Basket",
+                navShop: "Shop",
+                navBasket: "Basket",
+                tHeading: "Terms & Conditions",
+                tList: `
+                    <li><strong>Minimum Order Limit:</strong> Minimum order must be above Rs. 500.</li>
+                    <li><strong>Order Timing:</strong> 10:00 AM to 4:00 PM. Orders placed during this time will be delivered the next day.</li>
+                    <li><strong>Cancellation Policy:</strong> Cancellation charges will apply as per rules if cancelled after dispatch.</li>
+                `,
+                tAcceptText: "I accept all the terms and conditions above.",
+                tBtn: "Continue",
+                searchPlaceholder: "Search grains, rice, or items...",
+                addBtn: "Add to Basket",
+                bTitle: "Your Basket & Bill",
+                lName: "Customer Name:",
+                lPhone: "Mobile Number (10 digits):",
+                lDist: "Distance from shop (km):",
+                lAddr: "Full Delivery Address:",
+                btnGps: "📍 Add Live Location (GPS)",
+                lPay: "Payment Method:",
+                btnWhatsapp: "📦 Confirm & Send via WhatsApp",
+                toastAdd: "Added to basket!",
+                toastGps: "Location added successfully!",
+                errTerms: "Please accept terms and conditions before proceeding.",
+                errForm: "Please fill in Name, 10-digit Mobile Number, and Address.",
+                errMin: "Minimum order limit is Rs. 500. Please add more items."
             }
+        };
+
+        const products = [
+            { id: 1, nameMr: "पिसाळी हरभरा डाळ (प्रति किलो)", nameEn: "Split Chana Dal (per kg)", price: 94 },
+            { id: 2, nameMr: "उडीद डाळ (प्रति किलो)", nameEn: "Urad Dal (per kg)", price: 138 },
+            { id: 3, nameMr: "मुग (प्रति किलो)", nameEn: "Moong (per kg)", price: 110 },
+            { id: 4, nameMr: "दरी (प्रति किलो)", nameEn: "Dari (per kg)", price: 200 },
+            { id: 5, nameMr: "छोले (प्रति किलो)", nameEn: "Chole (per kg)", price: 120 },
+            { id: 6, nameMr: "वरी (प्रति किलो)", nameEn: "Vari (per kg)", price: 200 },
+            { id: 7, nameMr: "तुकडा इंदानी तांदूळ (प्रति किलो)", nameEn: "Broken Indani Rice (per kg)", price: 72 },
+            { id: 8, nameMr: "अखंड इंदानी तांदूळ (प्रति किलो)", nameEn: "Whole Indani Rice (per kg)", price: 86 },
+            { id: 9, nameMr: "महालक्ष्मी साळू (प्रति किलो)", nameEn: "Mahalaxmi Salu (per kg)", price: 72 },
+            { id: 10, nameMr: "मोती गोल साळू (प्रति किलो)", nameEn: "Moti Gol Salu (per kg)", price: 70 },
+            { id: 11, nameMr: "तलसी साळू (प्रति किलो)", nameEn: "Tlasi Salu (per kg)", price: 72 },
+            { id: 12, nameMr: "५ स्टार साळू (प्रति किलो)", nameEn: "5 Star Salu (per kg)", price: 78 }
+        ];
+
+        let cart = {};
+        let gpsLocationLink = "";
+        let currentLang = "mr";
+
+        function changeLanguage() {
+            currentLang = document.getElementById('langSwitcher').value;
+            let t = translations[currentLang];
+
+            document.getElementById('appTitle').innerText = t.appTitle;
+            document.getElementById('navShopBtn').innerText = t.navShop;
+            document.getElementById('navBasketBtn').innerText = t.navBasket;
+            document.getElementById('tHeading').innerText = t.tHeading;
+            document.getElementById('tList').innerHTML = t.tList;
+            document.getElementById('tAcceptText').innerText = t.tAcceptText;
+            document.getElementById('tBtn').innerText = t.tBtn;
+            document.getElementById('searchProduct').placeholder = t.searchPlaceholder;
+            document.getElementById('bTitle').innerText = t.bTitle;
+            document.getElementById('lName').innerText = t.lName;
+            document.getElementById('lPhone').innerText = t.lPhone;
+            document.getElementById('lDist').innerText = t.lDist;
+            document.getElementById('lAddr').innerText = t.lAddr;
+            document.getElementById('btnGps').innerText = t.btnGps;
+            document.getElementById('lPay').innerText = t.lPay;
+            document.getElementById('btnWhatsapp').innerHTML = t.btnWhatsapp;
+
+            renderProducts(products);
+            calculateBill();
+        }
+
+        function proceedToShop() {
+            const accept = document.getElementById('acceptTerms').checked;
+            if(!accept) {
+                alert(translations[currentLang].errTerms);
+                return;
+            }
+            document.getElementById('termsScreen').classList.remove('active');
+            document.getElementById('shopScreen').classList.add('active');
+            document.getElementById('navButtons').style.display = 'flex';
+            renderProducts(products);
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.btn-nav').forEach(b => b.classList.remove('active'));
+            
+            if(tabName === 'shop') {
+                document.getElementById('shopScreen').classList.add('active');
+                document.getElementById('navShopBtn').classList.add('active');
+            } else if(tabName === 'basket') {
+                document.getElementById('basketScreen').classList.add('active');
+                document.getElementById('navBasketBtn').classList.add('active');
+                calculateBill();
+            }
+        }
+
+        function renderProducts(list) {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            let t = translations[currentLang];
+            list.forEach(p => {
+                let pName = currentLang === 'en' ? p.nameEn : p.nameMr;
+                grid.innerHTML += `
+                    <div class="product-card">
+                        <div class="product-name">${pName}</div>
+                        <div class="product-price">Rs. ${p.price}</div>
+                        <button class="btn-add" onclick="addToCart(${p.id})">${t.addBtn}</button>
+                    </div>
+                `;
+            });
         }
 
         function filterProducts() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let cards = document.getElementsByClassName('product-card');
+            const query = document.getElementById('searchProduct').value.toLowerCase();
+            const filtered = products.filter(p => {
+                let name = (currentLang === 'en' ? p.nameEn : p.nameMr).toLowerCase();
+                return name.includes(query);
+            });
+            renderProducts(filtered);
+        }
 
-            for (let i = 0; i < cards.length; i++) {
-                let name = cards[i].getAttribute('data-name').toLowerCase();
-                if (name.includes(input)) {
-                    cards[i].style.display = "flex";
-                } else {
-                    cards[i].style.display = "none";
+        function addToCart(id) {
+            cart[id] = (cart[id] || 0) + 1;
+            updateCartCount();
+            showToast(translations[currentLang].toastAdd);
+        }
+
+        function updateCartCount() {
+            let totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
+            document.getElementById('cartCount').innerText = totalItems;
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 1500);
+        }
+
+        function calculateBill() {
+            let subtotal = 0;
+            let summaryHTML = `<div style="font-weight:bold; margin-bottom:8px;">${currentLang === 'en' ? 'Selected Items:' : 'निवडलेले जिन्नस:'}</div>`;
+            
+            for(let id in cart) {
+                if(cart[id] > 0) {
+                    let prod = products.find(p => p.id == id);
+                    let pName = currentLang === 'en' ? prod.nameEn : prod.nameMr;
+                    let cost = prod.price * cart[id];
+                    subtotal += cost;
+                    summaryHTML += `<div class="bill-row"><span>${pName} (x${cart[id]})</span><span>Rs. ${cost}</span></div>`;
                 }
+            }
+
+            let distance = parseFloat(document.getElementById('distanceKm').value) || 0;
+            let deliveryCharge = distance * 8;
+            let grandTotal = subtotal + deliveryCharge;
+
+            summaryHTML += `
+                <div style="margin-top:10px; border-top:1px solid #ddd; padding-top:8px;">
+                    <div class="bill-row"><span>${currentLang === 'en' ? 'Items Subtotal:' : 'मालाची एकूण किंमत:'}</span><span>Rs. ${subtotal}</span></div>
+                    <div class="bill-row"><span>${currentLang === 'en' ? 'Delivery Charge ('+distance+' km):' : 'डिलिव्हरी चार्ज ('+distance+' किमी):'}</span><span>Rs. ${deliveryCharge}</span></div>
+                    <div class="bill-row bill-total"><span>${currentLang === 'en' ? 'Grand Total:' : 'एकूण अंतिम बिल:'}</span><span>Rs. ${grandTotal}</span></div>
+                </div>
+            `;
+            document.getElementById('billSummaryContainer').innerHTML = summaryHTML;
+            return { subtotal, deliveryCharge, grandTotal };
+        }
+
+        function getLocationGPS() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    let lat = position.coords.latitude;
+                    let lon = position.coords.longitude;
+                    gpsLocationLink = `https://maps.google.com/?q=${lat},${lon}`;
+                    document.getElementById('custAddress').value = `GPS Location: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+                    showToast(translations[currentLang].toastGps);
+                }, () => {
+                    alert('Location access failed. Please enter address manually.');
+                });
+            } else {
+                alert('Geolocation is not supported by your browser.');
             }
         }
 
-        function addToCart(button) {
-            let card = button.closest('.product-card');
-            let name = card.querySelector('.product-name').innerText;
-            let weight = card.querySelector('.weight-select').selectedOptions[0].text;
-            let qty = parseInt(card.querySelector('.qty-input').value) || 1;
-            
-            cartCount += qty;
-            document.getElementById('basketCount').innerText = 'बास्केट: ' + cartCount;
-            alert(name + ' (' + weight + ') - ' + qty + ' नग बास्केटमध्ये समाविष्ट केले!');
-        }
+        function sendToWhatsApp() {
+            let name = document.getElementById('custName').value.trim();
+            let phone = document.getElementById('custPhone').value.trim();
+            let address = document.getElementById('custAddress').value.trim();
+            let payMethod = document.getElementById('payMethod').value;
+            let distance = document.getElementById('distanceKm').value;
+            let t = translations[currentLang];
 
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+            if(!name || phone.length < 10 || !address) {
+                alert(t.errForm);
+                return;
+            }
+
+            let bill = calculateBill();
+            if(bill.subtotal < 500) {
+                alert(t.errMin);
+                return;
+            }
+
+            let msg = `🛒 *नवीन ऑर्डर आली आहे! (Royal Mall Basket)*\n\n`;
+            msg += `👤 *Customer / ग्राहक:* ${name}\n`;
+            msg += `📱 *Mobile / मोबाईल:* ${phone}\n`;
+            msg += `📍 *Address / पत्ता:* ${address}\n`;
+            if(gpsLocationLink) msg += `🗺️ *GPS Link:* ${gpsLocationLink}\n`;
+            msg += `🛣️ *Distance / अंतर:* ${distance} km\n`;
+            msg += `💳 *Payment / पेमेंट प्रकार:* ${payMethod}\n\n`;
+            msg += `🛍️ *Items / ऑर्डर केलेले जिन्नस:*\n`;
+
+            for(let id in cart) {
+                if(cart[id] > 0) {
+                    let prod = products.find(p => p.id == id);
+                    let pName = currentLang === 'en' ? prod.nameEn : prod.nameMr;
+                    msg += `- ${pName} x ${cart[id]} (Rs. ${prod.price * cart[id]})\n`;
+                }
+            }
+
+            msg += `\n💰 *Subtotal / मालाची किंमत:* Rs. ${bill.subtotal}\n`;
+            msg += `🚚 *Delivery / डिलिव्हरी चार्ज:* Rs. ${bill.deliveryCharge}\n`;
+            msg += `🔥 *Total Bill / एकूण अंतिम बिल:* Rs. ${bill.grandTotal}\n`;
+
+            let ownerWhatsAppNumber = "919975401708";
+            let encodedURL = `https://wa.me/${ownerWhatsAppNumber}?text=` + encodeURIComponent(msg);
+            window.open(encodedURL, '_blank');
         }
     </script>
 </body>
