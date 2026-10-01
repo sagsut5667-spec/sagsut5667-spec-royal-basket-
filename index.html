@@ -3,168 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Royal Basket - ग्रोसरी डिलिव्हरी</title>
-    
-    <!-- ॲप आयकॉन -->
-    <link rel="icon" type="image/png" href="icon.png">
-    <link rel="apple-touch-icon" href="icon.png">
-    
-    <!-- Firebase SDK Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
+    <title>रॉयल मॉल बास्केट</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; text-align: center; }
-        .container { max-width: 400px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
-        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
-        .password-container { position: relative; width: 94%; margin: auto; }
-        .password-container input { width: 100%; box-sizing: border-box; padding-right: 40px; }
-        .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #666; }
-        button { background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; margin-top: 10px; }
-        button:hover { background-color: #218838; }
-        .switch-text { margin-top: 15px; color: #007bff; cursor: pointer; font-size: 14px; }
-        .switch-text:hover { text-decoration: underline; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; color: #333; }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; }
+        .product-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; }
+        .product-card { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+        .product-card h3 { font-size: 18px; margin: 10px 0; color: #27ae60; }
+        .product-card p { font-size: 16px; font-weight: bold; color: #e74c3c; }
+        .product-card button { background-color: #27ae60; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 14px; }
+        .product-card button:hover { background-color: #219653; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2 id="form-title">Royal Basket लॉगिन</h2>
-        
-        <!-- मोबाईल आणि पासवर्ड फॉर्म -->
-        <div id="auth-section">
-            <input type="tel" id="phone-number" placeholder="मोबाईल नंबर (उदा. 9975401708)" maxlength="10">
-            
-            <div class="password-container">
-                <input type="password" id="password" placeholder="६ अंकी पासवर्ड टाका" maxlength="6">
-                <span class="toggle-password" id="toggle-eye" onclick="togglePasswordVisibility()">👁️‍🗨️</span>
-            </div>
-
-            <button id="action-btn" onclick="handleAuth()">լogin / लॉगिन करा</button>
-            
-            <p class="switch-text" id="switch-btn" onclick="toggleMode()">नवीन आहात? नोंदणी (Register) करा</p>
-        </div>
-
-        <!-- लॉगिन झाल्यावर दिसणारा डॅशबोर्ड -->
-        <div id="welcome-section" style="display: none;">
-            <h2>स्वागत आहे! 🎉</h2>
-            <p id="user-display-phone" style="color: #555; font-weight: bold; font-size: 18px;"></p>
-            <p style="color: #666; font-size: 14px;">Royal Basket मध्ये आपले स्वागत आहे.</p>
-            <button style="background-color: #dc3545; margin-top: 20px;" onclick="logout()">बाहेर पडा (Logout)</button>
-        </div>
-    </div>
+    <h1>रॉयल मॉल बास्केट - प्रॉडक्ट सूची</h1>
+    <div class="product-container" id="product-grid"></div>
 
     <script>
-        // तुमच्या Firebase ची माहिती
-        const firebaseConfig = {
-          apiKey: "AIzaSyAGIGDVZ2aYmgVywJvoWloa9WFyecjTQe0",
-          authDomain: "royal-basket-30948.firebaseapp.com",
-          projectId: "royal-basket-30948",
-          storageBucket: "royal-basket-30948.firebasestorage.app",
-          messagingSenderId: "416510046272",
-          appId: "1:416510046272:web:a996b3f1de1bea89106fa5",
-          measurementId: "G-PPRMS4GV6E"
-        };
+        // सर्व प्रॉडक्ट्स आणि किमतींची एकत्रित यादी
+        const allStoreProducts = [
+            { id: 1, name: "मूग (प्रति किलो)", price: 110 },
+            { id: 2, name: "आख्खा मसर (प्रति किलो)", price: 90 },
+            { id: 3, name: "पिवळी हरभरा डाळ (प्रति किलो)", price: 94 },
+            { id: 4, name: "उडीद डाळ (प्रति किलो)", price: 138 },
+            { id: 5, name: "छोले (प्रति किलो)", price: 120 },
+            { id: 6, name: "वरी (प्रति किलो)", price: 200 },
+            { id: 7, name: "तुकडा इंद्राणी तांदूळ (प्रति किलो)", price: 72 },
+            { id: 8, name: "अखंड इंद्राणी तांदूळ (प्रति किलो)", price: 86 },
+            { id: 9, name: "महालक्ष्मी शाळू (प्रति किलो)", price: 72 },
+            { id: 10, name: "मोती गोल्ड शाळू (प्रति किलो)", price: 70 },
+            { id: 11, name: "तुलसी शाळू (प्रति किलो)", price: 57 },
+            { id: 12, name: "५ स्टार शाळू (प्रति किलो)", price: 64 },
+            { id: 13, name: "अमोल गहू (प्रति किलो)", price: 46 },
+            { id: 14, name: "ऑलपिक गहू (प्रति किलो)", price: 48 },
+            { id: 15, name: "किंग गहू (प्रति किलो)", price: 42 },
+            { id: 16, name: "बाजरी (प्रति किलो)", price: 42 },
+            { id: 17, name: "नाचना / नाचणी (प्रति किलो)", price: 55 },
+            { id: 18, name: "JSR कोलम राईस (प्रति किलो)", price: 70 },
+            { id: 19, name: "HMT बिर्ला जीरा तांदूळ (प्रति किलो)", price: 76 },
+            { id: 20, name: "वाडा कोलम तांदूळ (प्रति किलो)", price: 88 },
+            { id: 21, name: "इंडिया गेट (प्रति किलो)", price: 150 },
+            { id: 22, name: "जाडा तांदूळ (प्रति किलो)", price: 45 },
+            { id: 23, name: "रुची भोग ६ नंबर (प्रति किलो)", price: 104 },
+            { id: 24, name: "केशव ९० (प्रति किलो)", price: 120 },
+            { id: 25, name: "साहेब राईस (प्रति किलो)", price: 120 },
+            { id: 26, name: "तारिफ राईस (प्रति किलो)", price: 110 },
+            { id: 27, name: "दावत ७० (प्रति किलो)", price: 69 },
+            { id: 28, name: "RB कंडा (प्रति किलो)", price: 44 },
+            { id: 29, name: "सेवन स्टार (प्रति किलो)", price: 65 }
+        ];
 
-        // Firebase इनिशियलाइज करणे
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-
-        let isRegisterMode = false;
-
-        // पासवर्ड पाहण्यासाठी किंवा लपवण्यासाठी फंक्शन
-        function togglePasswordVisibility() {
-            const passwordInput = document.getElementById('password');
-            const eyeIcon = document.getElementById('toggle-eye');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.innerText = '👁️';
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.innerText = '👁️‍🗨️';
-            }
-        }
-
-        // लॉगिन किंवा रजिस्टर मोड बदलण्यासाठी
-        function toggleMode() {
-            isRegisterMode = !isRegisterMode;
-            const title = document.getElementById('form-title');
-            const btn = document.getElementById('action-btn');
-            const switchBtn = document.getElementById('switch-btn');
-
-            if (isRegisterMode) {
-                title.innerText = "Royal Basket नोंदणी";
-                btn.innerText = "खाते तयार करा (Register)";
-                switchBtn.innerText = "आधीच खाते आहे? लॉगिन करा";
-            } else {
-                title.innerText = "Royal Basket लॉगिन";
-                btn.innerText = "լogin / लॉगिन करा";
-                switchBtn.innerText = "नवीन आहात? नोंदणी (Register) करा";
-            }
-        }
-
-        // युजरने टाकलाय मोबाईल नंबर, त्याला युनिक ईमेल मध्ये कन्व्हर्ट करू (Firebase साठी)
-        function handleAuth() {
-            const phone = document.getElementById('phone-number').value.trim();
-            const password = document.getElementById('password').value.trim();
-
-            if (phone.length !== 10) {
-                alert('कृपया १० अंकी वैध मोबाईल नंबर टाका.');
-                return;
-            }
-            if (password.length !== 6) {
-                alert('कृपया ६ अंकी पासवर्ड टाका.');
-                return;
-            }
-
-            // Firebase ईमेल/पासवर्ड पद्धत वापरण्यासाठी मोबाईल नंबरला युनिक ईमेल बनवू (लपलेला राहील)
-            const dummyEmail = phone + "@royalbasket.app";
-
-            if (isRegisterMode) {
-                // नवीन खाते तयार करणे (Register)
-                auth.createUserWithEmailAndPassword(dummyEmail, password)
-                    .then((userCredential) => {
-                        alert('नोंदणी यशस्वी झाली!');
-                        showWelcome(phone);
-                    })
-                    .catch((error) => {
-                        if (error.code === 'auth/email-already-in-use') {
-                            alert('हा नंबर आधीपासून नोंदणीकृत आहे. कृपया लॉगिन करा.');
-                            toggleMode();
-                        } else {
-                            alert('एरर आला: ' + error.message);
-                        }
-                    });
-            } else {
-                // लॉगिन करणे (Login)
-                auth.signInWithEmailAndPassword(dummyEmail, password)
-                    .then((userCredential) => {
-                        alert('लॉगिन यशस्वी झाले!');
-                        showWelcome(phone);
-                    })
-                    .catch((error) => {
-                        alert('चुकीचा मोबाईल नंबर किंवा ६ अंकी पासवर्ड! कृपया पुन्हा तपासा.');
-                    });
-            }
-        }
-
-        // डॅशबोर्ड दाखवणे (इथे फक्त मोबाईल नंबर दिसेल, ई-मेल नाही)
-        function showWelcome(phone) {
-            document.getElementById('auth-section').style.display = 'none';
-            document.getElementById('welcome-section').style.display = 'block';
-            document.getElementById('user-display-phone').innerText = "मोबाईल नंबर: " + phone;
-        }
-
-        // बाहेर पडणे (Logout)
-        function logout() {
-            auth.signOut().then(() => {
-                document.getElementById('phone-number').value = '';
-                document.getElementById('password').value = '';
-                document.getElementById('auth-section').style.display = 'block';
-                document.getElementById('welcome-section').style.display = 'none';
+        // वेबसाईटवर प्रॉडक्ट्स कार्ड स्वरूपात दाखवणारे फंक्शन
+        function displayProducts() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = "";
+            
+            allStoreProducts.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <h3>${item.name}</h3>
+                    <p>किंमत: रु. ${item.price}</p>
+                    <button onclick="addToCart('${item.name}', ${item.price})">बास्केटमध्ये टाका</button>
+                `;
+                grid.appendChild(card);
             });
         }
+
+        // प्रॉडक्ट बास्केटमध्ये ॲड झाल्यावर मेसेज दाखवणारे फंक्शन
+        function addToCart(name, price) {
+            alert(name + ' (रु. ' + price + ') बास्केटमध्ये यशस्वीरित्या जोडले!');
+        }
+
+        // पेज लोड झाल्यावर सर्व प्रॉडक्ट्स स्क्रीनवर दिसतील
+        window.onload = displayProducts;
     </script>
+
 </body>
 </html>
