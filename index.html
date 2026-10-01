@@ -10,8 +10,8 @@
 
         /* Login Screen */
         #login-screen {
-            position: fixed; width: 100%; height: 100%; background: #2c3e50;
-            display: flex; justify-content: center; align-items: center; z-index: 1000;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #2c3e50;
+            display: flex; justify-content: center; align-items: center; z-index: 2000;
         }
         .login-box {
             background: #fff; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px;
@@ -26,6 +26,21 @@
             width: 100%; padding: 12px; background: #27ae60; color: white; border: none;
             border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px;
         }
+
+        /* Terms & Conditions Screen */
+        #tc-screen {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f6f8;
+            justify-content: center; align-items: center; z-index: 1500;
+        }
+        .tc-card {
+            background: #fff; width: 90%; max-width: 450px; padding: 25px; border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-height: 90vh; display: flex; flex-direction: column;
+        }
+        .tc-card h2 { color: #2c3e50; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 8px; text-align: center; }
+        .tc-body { font-size: 13px; line-height: 1.6; color: #444; overflow-y: auto; max-height: 50vh; margin-bottom: 15px; padding-right: 5px; }
+        .tc-body ul { padding-left: 18px; margin-top: 5px; }
+        .tc-checkbox-container { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; font-size: 13px; font-weight: bold; color: #333; cursor: pointer; }
+        .tc-checkbox-container input { width: 18px; height: 18px; cursor: pointer; flex-shrink: 0; }
 
         /* Main App Header */
         header {
@@ -61,40 +76,20 @@
             border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold;
         }
 
-        /* Toast Notification (Pop-up ऐवजी खाली दिसणारा मेसेज) */
+        /* Toast Notification */
         #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 4px;
-            padding: 12px;
-            position: fixed;
-            z-index: 2000;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            font-size: 14px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center;
+            border-radius: 4px; padding: 12px; position: fixed; z-index: 3000; left: 50%; bottom: 30px;
+            transform: translateX(-50%); font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-        #toast.show {
-            visibility: visible;
-            animation: fadein 0.5s, fadeout 0.5s 2s;
-        }
-        @keyframes fadein {
-            from { bottom: 0; opacity: 0; }
-            to { bottom: 30px; opacity: 1; }
-        }
-        @keyframes fadeout {
-            from { bottom: 30px; opacity: 1; }
-            to { bottom: 0; opacity: 0; }
-        }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2s; }
+        @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
+        @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
 
-        /* Modals (Popup) */
+        /* Modals */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100;
+            background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 2500;
         }
         .modal-content {
             background: white; width: 90%; max-width: 500px; padding: 20px; border-radius: 10px;
@@ -111,9 +106,6 @@
         .order-btn { background: #27ae60; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; margin-top: 15px; cursor: pointer; font-size: 16px; font-weight: bold; }
         .close-link { display: block; text-align: center; margin-top: 10px; color: #e74c3c; cursor: pointer; font-size: 14px; }
         .address-input { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; }
-        
-        .tc-box { font-size: 13px; line-height: 1.6; color: #444; }
-        .tc-box ul { padding-left: 20px; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -122,10 +114,28 @@
     <div id="login-screen">
         <div class="login-box">
             <h2>🛒 रॉयल मॉल बास्केट</h2>
-            <p style="margin-bottom: 15px; font-size: 14px; color: #666;">कृपया लॉगीन करा</p>
-            <input type="text" id="mobile-input" placeholder="मोबाईल नंबर टाका">
-            <input type="password" id="password-input" placeholder="पासवर्ड (उदा. 6 अंकी)">
+            <p style="margin-bottom: 15px; font-size: 14px; color: #666;">मोबाईल नंबर आणि पासवर्ड टाका</p>
+            <input type="text" id="mobile-input" placeholder="१० अंकी मोबाईल नंबर" maxlength="10">
+            <input type="password" id="password-input" placeholder="पासवर्ड / OTP">
             <button onclick="handleLogin()">लॉगीन करा</button>
+        </div>
+    </div>
+
+    <!-- नियम व अटी (Terms & Conditions) स्क्रीन -->
+    <div id="tc-screen">
+        <div class="tc-card">
+            <h2>📋 नियम आणि अटी (Terms & Conditions)</h2>
+            <div class="tc-body">
+                <p><b>१. किमान ऑर्डर मर्यादा:</b> किमान ५०० रुपयांच्या वरच सामान ऑर्डर करणे अनिवार्य आहे.</p>
+                <p style="margin-top: 8px;"><b>२. डिलिव्हरी व कॅन्सलेशन दंड:</b> घरी पोहोचल्यावर ऑर्डर कॅन्सल केल्यास मॉलपासूनचे **v km (डिलिव्हरी)** चार्जेस द्यावे लागतील.</p>
+                <p style="margin-top: 8px;"><b>३. COD नियम:</b> COD हवी असल्यास डिलिव्हरी चार्ज आणि एक्स्ट्रा चार्ज आधीच ऑनलाईन भरावा लागेल.</p>
+            </div>
+            
+            <label class="tc-checkbox-container">
+                <input type="checkbox" id="accept-tc"> मी वरील सर्व नियम आणि अटी मान्य केल्या आहेत.
+            </label>
+
+            <button class="order-btn" onclick="acceptTermsAndProceed()">पुढे जा (Continue)</button>
         </div>
     </div>
 
@@ -133,7 +143,7 @@
     <header>
         <h1>🛒 रॉयल मॉल बास्केट</h1>
         <div class="header-btns">
-            <button class="tc-btn" onclick="openTC()">अटी व शर्ती</button>
+            <button class="tc-btn" onclick="openTcModal()">अटी व शर्ती</button>
             <button class="cart-btn" onclick="openCart()">बास्केट (<span id="cart-count">0</span>)</button>
         </div>
     </header>
@@ -146,66 +156,78 @@
     <!-- प्रॉडक्ट लिस्ट -->
     <div class="product-container" id="product-grid"></div>
 
-    <!-- टॅस्ट नोटिफिकेशन (Pop-up ऐवजी खाली दिसणारा मेसेज) -->
+    <!-- टॅस्ट नोटिफिकेशन -->
     <div id="toast">प्रॉडक्ट बास्केटमध्ये जोडले!</div>
 
-    <!-- कार्ट / बिल मॉडेल (Popup) -->
+    <!-- कार्ट / बिल मॉडेल -->
     <div id="cart-modal" class="modal">
         <div class="modal-content">
             <h2>तुमची बास्केट आणि बिल</h2>
             
-            <label style="font-size: 13px; font-weight: bold; color: #444;">डिलिव्हरी पत्ता / अंतर (किमी):</label>
-            <input type="text" id="user-address" class="address-input" placeholder="मॉलपासूनचे अंतर (किमी मध्ये, उदा. 5)">
+            <label style="font-size: 13px; font-weight: bold; color: #444;">मॉलपासूनचे अंतर (किमी):</label>
+            <input type="text" id="user-distance" class="address-input" placeholder="उदा. 3">
+
+            <label style="font-size: 13px; font-weight: bold; color: #444;">डिलिव्हरीचा पूर्ण पत्ता:</label>
+            <input type="text" id="user-address" class="address-input" placeholder="घर नं, गल्ली, परिसर...">
             
             <div id="cart-items-list"></div>
 
             <div class="bill-details">
                 <div><span>मालाची एकूण किंमत:</span> <span id="subtotal-amount">रु. 0</span></div>
                 <div><span>डिलिव्हरी चार्ज (प्रति किमी ८ रु):</span> <span id="delivery-charge">रु. 0</span></div>
-                <div><span>अतिरिक्त चार्ज (१००० च्या पुढे):</span> <span id="extra-charge">रु. 0</span></div>
+                <div><span>अतिरिक्त चार्ज:</span> <span id="extra-charge">रु. 0</span></div>
                 <div><span>अंदाजे डिलिव्हरी वेळ:</span> <span id="delivery-time" style="font-weight: bold; color: #d35400;">-</span></div>
-                <div><span>पेमेंट प्रकार:</span> <span id="payment-mode" style="font-weight: bold; color: #2980b9;">-</span></div>
+                <div style="border-top: 1px dashed #ccc; padding-top: 5px; margin-top: 5px;">
+                    <span style="color: #27ae60; font-weight: bold;">आधी ऑनलाईन ਭरायची रक्कम:</span> <span id="online-pay-amount" style="font-weight: bold; color: #27ae60;">रु. 0</span>
+                </div>
+                <div>
+                    <span style="color: #c0392b; font-weight: bold;">घरी द्यायची रक्कम (COD):</span> <span id="cod-pay-amount" style="font-weight: bold; color: #c0392b;">रु. 0</span>
+                </div>
             </div>
 
             <div class="cart-total" id="cart-total-amount">एकूण अंतिम बिल: रु. 0</div>
             
-            <button class="order-btn" onclick="confirmOrder()">ऑर्डर कन्फर्म करा</button>
+            <button class="order-btn" id="pay-order-btn" onclick="confirmOrder()">ऑर्डर कन्फर्म करा आणि WhatsApp वर पाठवा</button>
             <span class="close-link" onclick="closeModal('cart-modal')">बंद करा</span>
         </div>
     </div>
 
-    <!-- अटी व शर्ती मॉडेल (Popup) -->
-    <div id="tc-modal" class="modal">
+    <!-- अटी व शर्ती माहिती पॉपअप -->
+    <div id="tc-info-modal" class="modal">
         <div class="modal-content">
             <h2>📋 नियम आणि अटी (Terms & Conditions)</h2>
-            <div class="tc-box">
-                <p><b>१. किमान ऑर्डर मर्यादा:</b></p>
-                <ul><li>किमान ५०० रुपयांच्या वरच सामान ऑर्डर करणे अनिवार्य आहे.</li></ul>
-                <p style="margin-top: 8px;"><b>२. डिलिव्हरी चार्ज आणि वेळ:</b></p>
-                <ul>
-                    <li>मॉल लोकेशनपासून डिलिव्हरी अंतराचे प्रति किलोमीटर ८ रुपये चार्ज आकारले जातील.</li>
-                    <li>खरेदीची किंमत १००० रुपयांपेक्षा जास्त झाल्यास, पुढील प्रत्येक हजारामागे ३० रुपये अतिरिक्त चार्ज जोडला जाईल.</li>
-                    <li>डिलिव्हरीचा अंदाजे वेळ हा मॉलपासूनचे अंतर आणि घेतलेल्या मालाच्या प्रमाणावर ठरवला जाईल.</li>
-                </ul>
-                <p style="margin-top: 8px;"><b>३. पेमेंटचे नियम:</b></p>
-                <ul>
-                    <li>२,५०० रुपयांपेक्षा कमी खरेदीवर **COD (कॅश ऑन डिलिव्हरी)** चा पर्याय मिळेल.</li>
-                    <li>२,५०० रुपयांपेक्षा जास्त खरेदीवर **ऑनलाइन पेमेंट** करणे बंधनकारक राहील.</li>
-                </ul>
+            <div class="tc-body" style="max-height: 60vh;">
+                <p><b>१. किमान ऑर्डर:</b> किमान ५०० रुपये.</p>
+                <p style="margin-top: 6px;"><b>२. डिलिव्हरी व कॅन्सलेशन:</b> प्रति किमी ८ रुपये चार्ज. घरी गेल्यावर कॅन्सल केल्यास v km चार्ज लागू.</p>
+                <p style="margin-top: 6px;"><b>३. COD नियम:</b> डिलिव्हरी आणि एक्स्ट्रा चार्ज आधी ऑनलाईन भरावा लागेल.</p>
             </div>
-            <button class="order-btn" onclick="closeModal('tc-modal')" style="background: #2c3e50;">समजले / बंद करा</button>
+            <button class="order-btn" onclick="closeModal('tc-info-modal')" style="background: #2c3e50;">बंद करा</button>
         </div>
     </div>
 
     <script>
+        let loggedInMobile = "";
+
         function handleLogin() {
             const mobile = document.getElementById('mobile-input').value;
             const password = document.getElementById('password-input').value;
 
             if (mobile.length === 10 && password.length >= 4) {
+                loggedInMobile = mobile; 
+                // लॉगिन स्क्रीन लपवा आणि T&C स्क्रीन दिसेल अशी खात्री करा
                 document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('tc-screen').style.display = 'flex';
             } else {
-                alert('कृपया १० अंकी मोबाईल नंबर आणि वैध पासवर्ड टाका!');
+                alert('कृपया बरोबर १० अंकी मोबाईल नंबर आणि वैध पासवर्ड/OTP टाका!');
+            }
+        }
+
+        function acceptTermsAndProceed() {
+            const isChecked = document.getElementById('accept-tc').checked;
+            if (isChecked) {
+                document.getElementById('tc-screen').style.display = 'none';
+            } else {
+                alert('ॲप पुढे सुरू करण्यासाठी कृपया अटी व शर्ती मान्य करण्याच्या बॉक्सवर टिक करा!');
             }
         }
 
@@ -274,8 +296,6 @@
             const product = allStoreProducts.find(item => item.id === id);
             cart.push(product);
             document.getElementById('cart-count').innerText = cart.length;
-            
-            // ॲलर्ट ऐवजी स्क्रीनच्या खाली छोटा मेसेज दाखवणारी फंक्शन
             showToast(product.name + ' बास्केटमध्ये जोडले!');
         }
 
@@ -285,6 +305,10 @@
             toast.className = "show";
             setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 2500);
         }
+
+        let calculatedGrandTotal = 0;
+        let calculatedOnlinePay = 0;
+        let calculatedCodPay = 0;
 
         function openCart() {
             const listContainer = document.getElementById('cart-items-list');
@@ -297,7 +321,8 @@
                 document.getElementById('delivery-charge').innerText = "रु. 0";
                 document.getElementById('extra-charge').innerText = "रु. 0";
                 document.getElementById('delivery-time').innerText = "-";
-                document.getElementById('payment-mode').innerText = "-";
+                document.getElementById('online-pay-amount').innerText = "रु. 0";
+                document.getElementById('cod-pay-amount').innerText = "रु. 0";
                 document.getElementById('cart-total-amount').innerText = "एकूण अंतिम बिल: रु. 0";
                 document.getElementById('cart-modal').style.display = 'flex';
                 return;
@@ -318,8 +343,7 @@
                 return;
             }
 
-            let distanceInput = prompt("कृपया मॉलपासून तुमच्या घराचे अंतर (किलोमीटर मध्ये) टाका:", "3");
-            let distance = parseFloat(distanceInput) || 3; 
+            let distance = parseFloat(document.getElementById('user-distance').value) || 3; 
             let deliveryFee = distance * 8;
 
             let extraFee = 0;
@@ -332,29 +356,29 @@
             let travelTimeMinutes = distance * 5;
             let itemHandlingMinutes = cart.length * 1;
             let totalDeliveryMinutes = travelTimeMinutes + itemHandlingMinutes + 15;
+            let timeString = totalDeliveryMinutes >= 60 ? `${(totalDeliveryMinutes/60).toFixed(1)} तास अंदाजे` : `${totalDeliveryMinutes} मिनिटे अंदाजे`;
 
-            let timeString = "";
-            if (totalDeliveryMinutes >= 60) {
-                let hours = (totalDeliveryMinutes / 60).toFixed(1);
-                timeString = `${hours} तास अंदाजे`;
-            } else {
-                timeString = `${totalDeliveryMinutes} मिनिटे अंदाजे`;
+            calculatedGrandTotal = subtotal + deliveryFee + extraFee;
+            calculatedOnlinePay = deliveryFee + extraFee;
+            calculatedCodPay = subtotal;
+
+            if (calculatedGrandTotal > 2500) {
+                calculatedOnlinePay = calculatedGrandTotal;
+                calculatedCodPay = 0;
             }
-
-            let grandTotal = subtotal + deliveryFee + extraFee;
-            let paymentType = grandTotal > 2500 ? "ऑनलाइन पेमेंट बंधनकारक" : "कॅश ऑन डिलिव्हरी (COD)";
 
             document.getElementById('subtotal-amount').innerText = `रु. ${subtotal}`;
             document.getElementById('delivery-charge').innerText = `रु. ${deliveryFee} (${distance} किमी)`;
             document.getElementById('extra-charge').innerText = `रु. ${extraFee}`;
             document.getElementById('delivery-time').innerText = timeString;
-            document.getElementById('payment-mode').innerText = paymentType;
-            document.getElementById('cart-total-amount').innerText = `एकूण अंतिम बिल: रु. ${grandTotal}`;
+            document.getElementById('online-pay-amount').innerText = `रु. ${calculatedOnlinePay}`;
+            document.getElementById('cod-pay-amount').innerText = `रु. ${calculatedCodPay}`;
+            document.getElementById('cart-total-amount').innerText = `एकूण अंतिम बिल: रु. ${calculatedGrandTotal}`;
             
             document.getElementById('cart-modal').style.display = 'flex';
         }
 
-        function openTC() {
+        function openTcModal() {
             document.getElementById('tc-modal').style.display = 'flex';
         }
 
@@ -363,7 +387,37 @@
         }
 
         function confirmOrder() {
-            alert('तुमची ऑर्डर यशस्वीरित्या नोंदवली गेली आहे! धन्यवाद.');
+            const address = document.getElementById('user-address').value;
+            const distance = document.getElementById('user-distance').value || "3";
+
+            if (!address) {
+                alert('कृपया डिलिव्हरीचा पत्ता प्रविष्ट करा!');
+                return;
+            }
+
+            let ownerWhatsAppNumber = "919975401708"; 
+            
+            let message = `🛒 *नवीन ऑर्डर आली आहे! (रॉयल मॉल बास्केट)*\n\n`;
+            message += `📱 *ग्राहक मोबाईल:* ${loggedInMobile}\n`;
+            message += `📍 *पत्ता:* ${address} (${distance} किमी)\n\n`;
+            message += `📦 *खरेदी केलेले सामान:*\n`;
+            
+            cart.forEach((item, index) => {
+                message += `${index + 1}. ${item.name} - रु. ${item.price}\n`;
+            });
+
+            message += `\n💰 *बिल तपशील:*\n`;
+            message += `• एकूण अंतिम बिल: रु. ${calculatedGrandTotal}\n`;
+            message += `• ऑनलाईन भरलेली रक्कम: रु. ${calculatedOnlinePay}\n`;
+            message += `• घरी घ्यायची रक्कम (COD): रु. ${calculatedCodPay}\n\n`;
+            message += `✅ कृपया ऑर्डर तपासून डिलिव्हरी पाठवावी.`;
+
+            let encodedMessage = encodeURIComponent(message);
+            let whatsappUrl = `https://wa.me/${ownerWhatsAppNumber}?text=${encodedMessage}`;
+
+            window.open(whatsappUrl, '_blank');
+
+            alert('ऑर्डर यशस्वीरित्या नोंदवली गेली! WhatsApp वर मेसेज पाठवत आहे.');
             cart = [];
             document.getElementById('cart-count').innerText = '0';
             closeModal('cart-modal');
