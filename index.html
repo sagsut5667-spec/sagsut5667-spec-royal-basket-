@@ -12,7 +12,7 @@
             background-color: #f4f6f7;
             color: #333333;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -21,57 +21,203 @@
             width: 100%;
             max-width: 480px;
             background: #ffffff;
-            padding: 25px;
+            padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            margin-top: 40px;
+            margin-bottom: 20px;
         }
-        .header-icon {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 10px;
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
         }
         h1 {
             color: #27ae60;
-            font-size: 24px;
+            font-size: 20px;
             margin: 5px 0;
         }
         .subtitle {
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-bottom: 20px;
+            color: #e67e22;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
-        .shop-btn {
+        .form-group {
+            margin-bottom: 12px;
+        }
+        label {
+            font-size: 12px;
+            color: #555;
+            display: block;
+            margin-bottom: 3px;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+            box-sizing: border-box;
+            background: #f9f9f9;
+        }
+        .btn {
             background: #27ae60;
             color: white;
             border: none;
             width: 100%;
-            padding: 14px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 6px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
+            margin-top: 5px;
+        }
+        .btn:hover {
+            background: #219653;
+        }
+        .product-card {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .product-info h3 {
+            font-size: 14px;
+            margin: 0 0 3px 0;
+        }
+        .product-info p {
+            font-size: 12px;
+            color: #e67e22;
+            margin: 0;
+            font-weight: bold;
+        }
+        .cart-section {
+            background: #e8f8f5;
+            border: 1px dashed #27ae60;
+            padding: 12px;
+            border-radius: 8px;
             margin-top: 15px;
         }
-        .shop-btn:hover {
-            background: #219653;
+        .support {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <img src="https://img.icons8.com/color/96/shopping-cart.png" class="header-icon" alt="Cart Logo">
-        <h1>रॉयल मॉल बास्केट</h1>
-        <div class="subtitle">आपली घरपोच भाजी व किराणा सेवा</div>
+        <div class="header">
+            <img src="https://img.icons8.com/color/48/shopping-cart.png" alt="Logo">
+            <h1>रॉयल मॉल बास्केट</h1>
+            <div class="subtitle">🛒 ऑर्डरची वेळ: सकाळी १०:०० ते दुपारी ४:००</div>
+        </div>
 
-        <p style="font-size: 14px; color: #555;">आमच्या मोबाईल ॲपमध्ये आपले स्वागत आहे! ताजे भाजीपाला आणि किराणा सामान घरपोच मागवा.</p>
+        <div class="form-group">
+            <select id="langSelect">
+                <option value="mr">मराठी (Marathi)</option>
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+            </select>
+        </div>
 
-        <button class="shop-btn" onclick="alert('खरेदी पेज लवकरच सुरू होईल!')">खरेदी सुरू करा</button>
+        <div class="form-group">
+            <label>मोबाईल नंबर</label>
+            <input type="tel" id="mobile" placeholder="१० अंकी नंबर टाका" maxlength="10">
+        </div>
+
+        <div class="form-group">
+            <label>पासवर्ड / पिन</label>
+            <input type="password" id="password" placeholder="पासवर्ड टाका">
+        </div>
+
+        <!-- प्रॉडक्ट यादी -->
+        <div style="margin-top: 15px;">
+            <h3 style="font-size: 15px; border-bottom: 2px solid #27ae60; padding-bottom: 5px;">भाजी व किराणा यादी</h3>
+            
+            <div class="product-card">
+                <div class="product-info">
+                    <h3>ताजे टोमॅटो (१ किलो)</h3>
+                    <p>₹ ४०</p>
+                </div>
+                <button class="btn" style="width: auto; padding: 6px 12px; font-size: 12px;" onclick="addToCart('टोमॅटो', 40)">ॲड करा</button>
+            </div>
+
+            <div class="product-card">
+                <div class="product-info">
+                    <h3>बटाटे (१ किलो)</h3>
+                    <p>₹ ३०</p>
+                </div>
+                <button class="btn" style="width: auto; padding: 6px 12px; font-size: 12px;" onclick="addToCart('बटाटे', 30)">ॲड करा</button>
+            </div>
+        </div>
+
+        <!-- कार्ट सेक्शन -->
+        <div class="cart-section">
+            <h3 style="font-size: 14px; margin-top: 0; color: #27ae60;">🛍️ तुमची बास्केट (कार्ट)</h3>
+            <div id="cartItems" style="font-size: 13px; color: #333; margin-bottom: 8px;">कार्ट रिकामी आहे</div>
+            <div style="font-weight: bold; font-size: 13px; margin-bottom: 8px;">एकूण किंमत: ₹ <span id="totalPrice">0</span></div>
+            <button class="btn" onclick="checkoutOrder()">व्हाट्सअपवर ऑर्डर पाठवा</button>
+        </div>
+
+        <div class="support">
+            सहाय्यसाठी संपर्क (WhatsApp): <b>9975401708</b>
+        </div>
     </div>
 
+    <script>
+        let cart = [];
+        let total = 0;
+
+        function addToCart(itemName, price) {
+            cart.push({name: itemName, price: price});
+            total += price;
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const cartContainer = document.getElementById('cartItems');
+            const totalPriceElem = document.getElementById('totalPrice');
+            
+            if(cart.length === 0) {
+                cartContainer.innerHTML = "कार्ट रिकामी आहे";
+            } else {
+                let itemsText = cart.map(item => `${item.name} (₹${item.price})`).join(', ');
+                cartContainer.innerHTML = itemsText;
+            }
+            totalPriceElem.innerText = total;
+        }
+
+        function checkoutOrder() {
+            const mobile = document.getElementById('mobile').value;
+            if(mobile.length !== 10) {
+                alert('कृपया १० अंकी मोबाईल नंबर अचूक भरा!');
+                return;
+            }
+            if(cart.length === 0) {
+                alert('कृपया कार्टमध्ये किमान एक वस्तू निवडा!');
+                return;
+            }
+
+            // वेळ तपासणी (सकाळी 10 ते दुपारी 4 म्हणजेच 10 ते 16 वाजेपर्यंत)
+            const currentHour = new Date().getHours();
+            let timeStatus = (currentHour >= 10 && currentHour < 16) ? "आजची डिलिव्हरी" : "उद्याची डिलिव्हरी (Next-Day Delivery)";
+
+            let orderText = `*नवीन ऑर्डर - रॉयल मॉल बास्केट*%0Aमोबाईल नंबर: ${mobile}%0Aडिलिव्हरी प्रकार: ${timeStatus}%0A-------------------%0A`;
+            cart.forEach(item => {
+                orderText += `- ${item.name}: ₹${item.price}%0A`;
+            });
+            orderText += `-------------------%0A*एकूण रक्कम: ₹${total}*`;
+
+            // WhatsApp वर पाठवणे
+            let whatsappUrl = `https://wa.me/919975401708?text=${orderText}`;
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
 </body>
 </html>
