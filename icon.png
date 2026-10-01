@@ -1,17 +1,1 @@
-<!-- हा आयकॉन तुम्ही थेट तुमच्या Index.html फाईलच्या <head> टॅगमध्ये <link rel="icon" ...> ऐवजी किंवा icon.png फाईल म्हणून वापरू शकता -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <!-- बॅकग्राउंड गोल -->
-  <circle cx="256" cy="256" r="240" fill="#28a745"/>
-  
-  <!-- बास्केटचा आकार (Shopping Basket) -->
-  <path d="M130 200 H382 L350 380 H162 Z" fill="#ffffff" opacity="0.9"/>
-  <path d="M110 160 H402 V190 H110 Z" fill="#ffffff" rx="10"/>
-  
-  <!-- हँडल (Handle) -->
-  <path d="M190 160 V110 C190 85 322 85 322 110 V160" fill="none" stroke="#ffffff" stroke-width="24" stroke-linecap="round"/>
-  
-  <!-- फळे आणि भाजीपाला (Grocery Elements inside basket) -->
-  <circle cx="210" cy="260" r="28" fill="#ffc107"/>
-  <circle cx="270" cy="250" r="32" fill="#dc3545"/>
-  <circle cx="320" cy="275" r="24" fill="#17a2b8"/>
-</svg>
+
