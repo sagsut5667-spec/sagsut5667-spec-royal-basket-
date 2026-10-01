@@ -104,6 +104,7 @@
         .cart-total { font-size: 17px; font-weight: bold; text-align: right; margin-top: 10px; color: #c0392b; border-top: 2px solid #ddd; padding-top: 8px; }
         
         .order-btn { background: #27ae60; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; margin-top: 15px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        .location-btn { background: #2980b9; color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; margin-bottom: 10px; cursor: pointer; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .close-link { display: block; text-align: center; margin-top: 10px; color: #e74c3c; cursor: pointer; font-size: 14px; }
         .address-input { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; }
     </style>
@@ -169,6 +170,10 @@
 
             <label style="font-size: 13px; font-weight: bold; color: #444;">डिलिव्हरीचा पूर्ण पत्ता:</label>
             <input type="text" id="user-address" class="address-input" placeholder="घर नं, गल्ली, परिसर...">
+
+            <!-- लोकेशन शेअर करण्यासाठी नवीन बटण -->
+            <button class="location-btn" onclick="getLocation()">📍 माझे लाईव्ह लोकेशन (GPS) जोडा</button>
+            <p id="location-status" style="font-size: 12px; color: #27ae60; margin-bottom: 10px; text-align: center;"></p>
             
             <div id="cart-items-list"></div>
 
@@ -207,6 +212,7 @@
 
     <script>
         let loggedInMobile = "";
+        let userGpsLink = "";
 
         function handleLogin() {
             const mobile = document.getElementById('mobile-input').value;
@@ -214,7 +220,6 @@
 
             if (mobile.length === 10 && password.length >= 4) {
                 loggedInMobile = mobile; 
-                // लॉगिन स्क्रीन लपवा आणि T&C स्क्रीन दिसेल अशी खात्री करा
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('tc-screen').style.display = 'flex';
             } else {
@@ -228,6 +233,29 @@
                 document.getElementById('tc-screen').style.display = 'none';
             } else {
                 alert('ॲप पुढे सुरू करण्यासाठी कृपया अटी व शर्ती मान्य करण्याच्या बॉक्सवर टिक करा!');
+            }
+        }
+
+        // GPS लोकेशन मिळवण्याचे फंक्शन
+        function getLocation() {
+            const statusText = document.getElementById('location-status');
+            if (navigator.geolocation) {
+                statusText.innerText = "लोकेशन शोधत आहे, कृपया प्रतीक्षा करा...";
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        userGpsLink = `https://www.google.com/maps?q=${lat},${lng}`;
+                        statusText.innerText = "✓ लोकेशन यशस्वीरित्या जोडले गेले आहे!";
+                    },
+                    (error) => {
+                        statusText.style.color = "#e74c3c";
+                        statusText.innerText = "लोकेशन मिळवण्यात अपयश. कृपया GPS चालू करा.";
+                    }
+                );
+            } else {
+                statusText.style.color = "#e74c3c";
+                statusText.innerText = "तुमचा ब्राऊजर लोकेशन सपोर्ट करत नाही.";
             }
         }
 
@@ -399,8 +427,15 @@
             
             let message = `🛒 *नवीन ऑर्डर आली आहे! (रॉयल मॉल बास्केट)*\n\n`;
             message += `📱 *ग्राहक मोबाईल:* ${loggedInMobile}\n`;
-            message += `📍 *पत्ता:* ${address} (${distance} किमी)\n\n`;
-            message += `📦 *खरेदी केलेले सामान:*\n`;
+            message += `📍 *पत्ता:* ${address} (${distance} किमी)\n`;
+            
+            if (userGpsLink) {
+                message += `🗺️ *लोकेशन (Google Map):* ${userGpsLink}\n`;
+            } else {
+                message += `🗺️ *लोकेशन:* शेअर केलेले नाही\n`;
+            }
+
+            message += `\n📦 *खरेदी केलेले सामान:*\n`;
             
             cart.forEach((item, index) => {
                 message += `${index + 1}. ${item.name} - रु. ${item.price}\n`;
