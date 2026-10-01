@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>रॉयल मॉल बास्केट</title>
+    <!-- PWA साठी मॅनफेस्ट लिंक -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2c3e50">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         body { background-color: #f4f6f8; color: #333; }
@@ -38,7 +41,6 @@
         }
         .tc-card h2 { color: #2c3e50; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 8px; text-align: center; }
         .tc-body { font-size: 13px; line-height: 1.6; color: #444; overflow-y: auto; max-height: 50vh; margin-bottom: 15px; padding-right: 5px; }
-        .tc-body ul { padding-left: 18px; margin-top: 5px; }
         .tc-checkbox-container { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; font-size: 13px; font-weight: bold; color: #333; cursor: pointer; }
         .tc-checkbox-container input { width: 18px; height: 18px; cursor: pointer; flex-shrink: 0; }
 
@@ -106,7 +108,7 @@
         .order-btn { background: #27ae60; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; margin-top: 15px; cursor: pointer; font-size: 16px; font-weight: bold; }
         .location-btn { background: #2980b9; color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; margin-bottom: 10px; cursor: pointer; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .close-link { display: block; text-align: center; margin-top: 10px; color: #e74c3c; cursor: pointer; font-size: 14px; }
-        .address-input { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .address-input, .payment-select { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -122,14 +124,14 @@
         </div>
     </div>
 
-    <!-- नियम व अटी (Terms & Conditions) स्क्रीन -->
+    <!-- नियम व अटी स्क्रीन -->
     <div id="tc-screen">
         <div class="tc-card">
             <h2>📋 नियम आणि अटी (Terms & Conditions)</h2>
             <div class="tc-body">
                 <p><b>१. किमान ऑर्डर मर्यादा:</b> किमान ५०० रुपयांच्या वरच सामान ऑर्डर करणे अनिवार्य आहे.</p>
                 <p style="margin-top: 8px;"><b>२. डिलिव्हरी व कॅन्सलेशन दंड:</b> घरी पोहोचल्यावर ऑर्डर कॅन्सल केल्यास मॉलपासूनचे **v km (डिलिव्हरी)** चार्जेस द्यावे लागतील.</p>
-                <p style="margin-top: 8px;"><b>३. COD नियम:</b> COD हवी असल्यास डिलिव्हरी चार्ज आणि एक्स्ट्रा चार्ज आधीच ऑनलाईन भरावा लागेल.</p>
+                <p style="margin-top: 8px;"><b>३. नियम:</b> डिलिव्हरी चार्ज आणि एक्स्ट्रा चार्ज आधीच आमच्या नंबरवर ऑनलाईन भरावा लागेल.</p>
             </div>
             
             <label class="tc-checkbox-container">
@@ -171,7 +173,14 @@
             <label style="font-size: 13px; font-weight: bold; color: #444;">डिलिव्हरीचा पूर्ण पत्ता:</label>
             <input type="text" id="user-address" class="address-input" placeholder="घर नं, गल्ली, परिसर...">
 
-            <!-- लोकेशन शेअर करण्यासाठी नवीन बटण -->
+            <!-- पेमेंट प्रकार निवडण्यासाठी पर्याय -->
+            <label style="font-size: 13px; font-weight: bold; color: #444;">पेमेंटचा प्रकार निवडा (Payment Method):</label>
+            <select id="payment-method-select" class="payment-select">
+                <option value="COD">कॅश ऑन डिलिव्हरी (COD - रोख रक्कम)</option>
+                <option value="Online">ऑनलाईन पेमेंट (Online Payment)</option>
+            </select>
+
+            <!-- लोकेशन शेअर करण्यासाठी बटण -->
             <button class="location-btn" onclick="getLocation()">📍 माझे लाईव्ह लोकेशन (GPS) जोडा</button>
             <p id="location-status" style="font-size: 12px; color: #27ae60; margin-bottom: 10px; text-align: center;"></p>
             
@@ -183,10 +192,10 @@
                 <div><span>अतिरिक्त चार्ज:</span> <span id="extra-charge">रु. 0</span></div>
                 <div><span>अंदाजे डिलिव्हरी वेळ:</span> <span id="delivery-time" style="font-weight: bold; color: #d35400;">-</span></div>
                 <div style="border-top: 1px dashed #ccc; padding-top: 5px; margin-top: 5px;">
-                    <span style="color: #27ae60; font-weight: bold;">आधी ऑनलाईन ਭरायची रक्कम:</span> <span id="online-pay-amount" style="font-weight: bold; color: #27ae60;">रु. 0</span>
+                    <span style="color: #27ae60; font-weight: bold;">आमच्याकडे ऑनलाईन ਭरायची रक्कम:</span> <span id="online-pay-amount" style="font-weight: bold; color: #27ae60;">रु. 0</span>
                 </div>
                 <div>
-                    <span style="color: #c0392b; font-weight: bold;">घरी द्यायची रक्कम (COD):</span> <span id="cod-pay-amount" style="font-weight: bold; color: #c0392b;">रु. 0</span>
+                    <span style="color: #c0392b; font-weight: bold;">मॉलला द्यायची रक्कम:</span> <span id="cod-pay-amount" style="font-weight: bold; color: #c0392b;">रु. 0</span>
                 </div>
             </div>
 
@@ -203,14 +212,21 @@
             <h2>📋 नियम आणि अटी (Terms & Conditions)</h2>
             <div class="tc-body" style="max-height: 60vh;">
                 <p><b>१. किमान ऑर्डर:</b> किमान ५०० रुपये.</p>
-                <p style="margin-top: 6px;"><b>२. डिलिव्हरी व कॅन्सलेशन:</b> प्रति किमी ८ रुपये चार्ज. घरी गेल्यावर कॅन्सल केल्यास v km चार्ज लागू.</p>
-                <p style="margin-top: 6px;"><b>३. COD नियम:</b> डिलिव्हरी आणि एक्स्ट्रा चार्ज आधी ऑनलाईन भरावा लागेल.</p>
+                <p style="margin-top: 6px;"><b>२. डिलिव्हरी व कॅन्सलेशन:</b> प्रति किमी ८ रुपये चार्ज.</p>
+                <p style="margin-top: 6px;"><b>३. नियम:</b> डिलिव्हरी आणि एक्स्ट्रा चार्ज आमच्या नंबरवर ऑनलाईन भरावा लागेल.</p>
             </div>
             <button class="order-btn" onclick="closeModal('tc-info-modal')" style="background: #2c3e50;">बंद करा</button>
         </div>
     </div>
 
     <script>
+        // PWA इन्स्टॉलेशन्ससाठी सर्व्हिस वर्कर रजिस्टर करणे
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed: ', err));
+            });
+        }
+
         let loggedInMobile = "";
         let userGpsLink = "";
 
@@ -236,7 +252,6 @@
             }
         }
 
-        // GPS लोकेशन मिळवण्याचे फंक्शन
         function getLocation() {
             const statusText = document.getElementById('location-status');
             if (navigator.geolocation) {
@@ -390,11 +405,6 @@
             calculatedOnlinePay = deliveryFee + extraFee;
             calculatedCodPay = subtotal;
 
-            if (calculatedGrandTotal > 2500) {
-                calculatedOnlinePay = calculatedGrandTotal;
-                calculatedCodPay = 0;
-            }
-
             document.getElementById('subtotal-amount').innerText = `रु. ${subtotal}`;
             document.getElementById('delivery-charge').innerText = `रु. ${deliveryFee} (${distance} किमी)`;
             document.getElementById('extra-charge').innerText = `रु. ${extraFee}`;
@@ -417,6 +427,7 @@
         function confirmOrder() {
             const address = document.getElementById('user-address').value;
             const distance = document.getElementById('user-distance').value || "3";
+            const paymentMethod = document.getElementById('payment-method-select').value;
 
             if (!address) {
                 alert('कृपया डिलिव्हरीचा पत्ता प्रविष्ट करा!');
@@ -435,16 +446,17 @@
                 message += `🗺️ *लोकेशन:* शेअर केलेले नाही\n`;
             }
 
+            message += `💳 *निवडलेला पेमेंट प्रकार:* ${paymentMethod === 'COD' ? 'कॅश ऑन डिलिव्हरी (COD)' : 'ऑनलाईन पेमेंट'}\n`;
+
             message += `\n📦 *खरेदी केलेले सामान:*\n`;
-            
             cart.forEach((item, index) => {
                 message += `${index + 1}. ${item.name} - रु. ${item.price}\n`;
             });
 
-            message += `\n💰 *बिल तपशील:*\n`;
-            message += `• एकूण अंतिम बिल: रु. ${calculatedGrandTotal}\n`;
-            message += `• ऑनलाईन भरलेली रक्कम: रु. ${calculatedOnlinePay}\n`;
-            message += `• घरी घ्यायची रक्कम (COD): रु. ${calculatedCodPay}\n\n`;
+            message += `\n💰 *पेमेंट व बिल तपशील:*\n`;
+            message += `• मालाची एकूण किंमत: रु. ${calculatedCodPay} (${paymentMethod === 'COD' ? 'मॉलला द्यायची / COD' : 'ऑनलाईन करायची'})\n`;
+            message += `• डिलिव्हरी व अतिरिक्त चार्ज: रु. ${calculatedOnlinePay} (तुमच्या नंबरवर भरायचा)\n`;
+            message += `• एकूण अंतिम बिल: रु. ${calculatedGrandTotal}\n\n`;
             message += `✅ कृपया ऑर्डर तपासून डिलिव्हरी पाठवावी.`;
 
             let encodedMessage = encodeURIComponent(message);
