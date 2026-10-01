@@ -22,19 +22,31 @@
             font-size: 20px;
             font-weight: bold;
         }
+        .container {
+            padding: 15px;
+            max-width: 600px;
+            margin: auto;
+        }
+        /* सण शुभेच्छा बॅनर्स (टर्म्सच्या आधी दिसणार) */
         .festival-banner {
             background: linear-gradient(135deg, #ff7e5f, #feb47b);
             color: #fff;
             padding: 15px;
             border-radius: 12px;
             text-align: center;
-            margin: 15px;
+            margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        .container {
-            padding: 15px;
-            max-width: 600px;
-            margin: auto;
+        /* नियम आणि अटी बॉक्स */
+        .terms-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        /* मुख्य दुकान / प्रॉडक्ट्स सेक्शन */
+        .shop-section {
+            display: none;
         }
         .search-input {
             width: 100%;
@@ -95,6 +107,17 @@
         .add-btn:hover {
             background-color: #219653;
         }
+        .btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
@@ -103,84 +126,112 @@
         रॉयल मॉल बास्केट 🛒
     </header>
 
-    <!-- दसरा व दिवाळी सण शुभेच्छा बॅनर्स -->
-    <div class="festival-banner">
-        <h2 style="margin: 0 0 5px 0; font-size: 18px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">✨ दसरा व दिवाळीच्या हार्दिक शुभेच्छा! 🪔</h2>
-        <p style="margin: 0; font-size: 12px; font-weight: bold; line-height: 1.4;">
-            रॉयल मॉल बास्केट परिवाराकडून आपणास व आपल्या कुटुंबास सुख-समृद्धी लाभो!
-        </p>
-    </div>
-
     <div class="container">
-        <!-- सर्च बार -->
-        <input type="text" id="searchInput" class="search-input" placeholder="🔍 धान्य, तांदूळ किंवा किराणा शोधा..." onkeyup="filterProducts()">
-
-        <!-- उत्पादनांची यादी (वजन आणि प्रमाण निवडण्याच्या पर्यायासह) -->
-        <div id="productList">
-            <div class="product-card" data-name="पिसाळी हमरा डահळ तांदूळ">
-                <div class="product-info">
-                    <span class="product-name">पिसाळी हमरा डहाळ तांदूळ</span>
-                    <span class="product-price">₹94 / किलो</span>
-                </div>
-                <div class="controls-row">
-                    <select class="weight-select">
-                        <२०० ग्रॅम> २५० ग्रॅम</option>
-                        <option value="500">५०० ग्रॅम</option>
-                        <option value="1000" selected>१ किलो</option>
-                        <option value="2000">२ किलो</option>
-                        <option value="5000">५ किलो</option>
-                        <option value="10000">१० किलो</option>
-                        <option value="25000">२५ किलो</option>
-                    </select>
-                    <input type="number" class="qty-input" min="1" value="1" placeholder="नग">
-                    <button class="add-btn" onclick="addToCart(this)">बास्केटमध्ये टाका</button>
-                </div>
+        
+        <!-- १. टर्म्स आणि कंडिशनच्या आधी सण शुभेच्छा आणि नियम -->
+        <div id="termsSection" class="terms-box">
+            <!-- दसरा व दिवाळी सण शुभेच्छा बॅनर्स -->
+            <div class="festival-banner">
+                <h2 style="margin: 0 0 5px 0; font-size: 18px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">✨ दसरा व दिवाळीच्या हार्दिक शुभेच्छा! 🪔</h2>
+                <p style="margin: 0; font-size: 12px; font-weight: bold; line-height: 1.4;">
+                    रॉयल मॉल बास्केट परिवाराकडून आपणास व आपल्या कुटुंबास सुख-समृद्धी लाभो!
+                </p>
             </div>
 
-            <div class="product-card" data-name="उडीद डाळ">
-                <div class="product-info">
-                    <span class="product-name">उडीद डाळ</span>
-                    <span class="product-price">₹138 / किलो</span>
-                </div>
-                <div class="controls-row">
-                    <select class="weight-select">
-                        <option value="250">२५० ग्रॅम</option>
-                        <option value="500">५०० ग्रॅम</option>
-                        <option value="1000" selected>१ किलो</option>
-                        <option value="2000">२ किलो</option>
-                        <option value="5000">५ किलो</option>
-                        <option value="10000">१० किलो</option>
-                        <option value="25000">२५ किलो</option>
-                    </select>
-                    <input type="number" class="qty-input" min="1" value="1" placeholder="नग">
-                    <button class="add-btn" onclick="addToCart(this)">बास्केटमध्ये टाका</button>
-                </div>
-            </div>
+            <h3>नियम आणि अटी (Terms & Conditions)</h3>
+            <ul style="font-size: 14px; line-height: 1.6; padding-left: 20px;">
+                <li>किमान ऑर्डर मर्यादा: किमान ५०० रुपयांच्या दरम्याम सामानाची ऑर्डर करावी लागेल.</li>
+                <li>ऑर्डरची वेळ: सकाळी १०:०० ते दुपारी ४:०० वाजेपर्यंत, या वेळेत ऑर्डर दिल्यास दिवशी डिलिव्हरी केली जाईल.</li>
+                <li>डिलिव्हरी व कॅन्सलेशन्स दर: पार्सपॉल्यावर ऑर्डर कॅन्सल केल्यास नियमानुसार चार्ज लागेल.</li>
+            </ul>
+            <label style="display: flex; align-items: center; gap: 10px; margin-top: 15px; font-size: 14px; cursor: pointer;">
+                <input type="checkbox" id="agreeCheck" style="width: 18px; height: 18px;"> मी वरील सर्व नियम आणि अटी मान्य केल्या आहेत.
+            </label>
+            <button class="btn" onclick="acceptTerms()">पुढे जा (Continue)</button>
+        </div>
 
-            <div class="product-card" data-name="मुग डाळ">
-                <div class="product-info">
-                    <span class="product-name">मुग डाळ</span>
-                    <span class="product-price">₹110 / किलो</span>
+        <!-- २. टर्म्स स्वीकारल्यानंतर दिसणारे प्रॉडक्ट्स आणि सर्च बार -->
+        <div id="shopSection" class="shop-section">
+            <!-- सर्च बार -->
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 धान्य, तांदूळ किंवा किराणा शोधा..." onkeyup="filterProducts()">
+
+            <!-- उत्पादनांची यादी -->
+            <div id="productList">
+                <div class="product-card" data-name="पिसाळी हमरा डहाळ तांदूळ">
+                    <div class="product-info">
+                        <span class="product-name">पिसाळी हमरा डहाळ तांदूळ</span>
+                        <span class="product-price">₹94 / किलो</span>
+                    </div>
+                    <div class="controls-row">
+                        <select class="weight-select">
+                            <option value="250">२५० ग्रॅम</option>
+                            <option value="500">५०० ग्रॅम</option>
+                            <option value="1000" selected>१ किलो</option>
+                            <option value="2000">२ किलो</option>
+                            <option value="5000">५ किलो</option>
+                            <option value="10000">१० किलो</option>
+                            <option value="25000">२५ किलो</option>
+                        </select>
+                        <input type="number" class="qty-input" min="1" value="1" placeholder="नग">
+                        <button class="add-btn" onclick="addToCart(this)">बास्केटमध्ये टाका</button>
+                    </div>
                 </div>
-                <div class="controls-row">
-                    <select class="weight-select">
-                        <option value="250">२५० ग्रॅम</option>
-                        <option value="500">५०० ग्रॅम</option>
-                        <option value="1000" selected>१ किलो</option>
-                        <option value="2000">२ किलो</option>
-                        <option value="5000">५ किलो</option>
-                        <option value="10000">१० किलो</option>
-                        <option value="25000">२५ किलो</option>
-                    </select>
-                    <input type="number" class="qty-input" min="1" value="1" placeholder="नग">
-                    <button class="add-btn" onclick="addToCart(this)">बास्केटमध्ये टाका</button>
+
+                <div class="product-card" data-name="उडीद डाळ">
+                    <div class="product-info">
+                        <span class="product-name">उडीद डाळ</span>
+                        <span class="product-price">₹138 / किलो</span>
+                    </div>
+                    <div class="controls-row">
+                        <select class="weight-select">
+                            <option value="250">२५० ग्रॅम</option>
+                            <option value="500">५०० ग्रॅम</option>
+                            <option value="1000" selected>१ किलो</option>
+                            <option value="2000">२ किलो</option>
+                            <option value="5000">५ किलो</option>
+                            <option value="10000">१० किलो</option>
+                            <option value="25000">२५ किलो</option>
+                        </select>
+                        <input type="number" class="qty-input" min="1" value="1" placeholder="नग">
+                        <button class="add-btn" onclick="addToCart(this)">बास्केटमध्ये टाका</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-name="मुग डाळ">
+                    <div class="product-info">
+                        <span class="product-name">मुग डाळ</span>
+                        <span class="product-price">₹110 / किलो</span>
+                    </div>
+                    <div class="controls-row">
+                        <select class="weight-select">
+                            <option value="250">२५० ग्रॅम</option>
+                            <option value="500">५०० ग्रॅम</option>
+                            <option value="1000" selected>१ किलो</option>
+                            <option value="2000">२ किलो</option>
+                            <option value="5000">५ किलो</option>
+                            <option value="10000">१० किलो</option>
+                            <option value="25000">२५ किलो</option>
+                        </select>
+                        <input type="number" class="qty-input" min="1" value="1" placeholder="नग">
+                        <button class="add-btn" onclick="addToCart(this)">बास्केटमध्ये टाका</button>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 
     <script>
-        // सर्च फिल्टर फंक्शन
+        function acceptTerms() {
+            let checkbox = document.getElementById('agreeCheck');
+            if (checkbox.checked) {
+                document.getElementById('termsSection').style.display = 'none';
+                document.getElementById('shopSection').style.display = 'block';
+            } else {
+                alert('कृपया पुढे जाण्यापूर्वी नियम आणि अटी मान्य करा बॉक्सवर क्लिक करा.');
+            }
+        }
+
         function filterProducts() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('product-card');
