@@ -1,14 +1,16 @@
 {
   "name": "रॉयल मॉल बास्केट",
   "short_name": "रॉयल मॉल",
-  "start_url": "./index.html",
+  "id": "royal-mall-basket",
+  "description": "रॉयल मॉल ऑनलाइन शॉपिंग app",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#2c3e50",
-  "theme_color": "#2c3e50",
+  "background_color": "#2C3E50",
+  "theme_color": "#2C3E50",
   "icons": [
     {
       "src": "icon.svg",
-      "sizes": "512x512",
+      "sizes": "any",
       "type": "image/svg+xml"
     }
   ]
