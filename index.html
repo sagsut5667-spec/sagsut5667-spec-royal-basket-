@@ -30,8 +30,17 @@
         .screen { display: none; }
         .screen.active { display: block; }
 
-        /* Terms Screen */
+        /* Terms Screen & Festival Banner */
         .terms-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .festival-banner {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
         .terms-card h2 { margin-bottom: 15px; color: var(--primary-color); font-size: 1.3rem; }
         .terms-list { margin-bottom: 20px; padding-left: 20px; line-height: 1.6; font-size: 0.95rem; }
         .terms-list li { margin-bottom: 10px; }
@@ -78,9 +87,18 @@
     </header>
 
     <div class="container">
-        <!-- 1. Terms Screen -->
+        <!-- 1. Terms Screen with Festival Banner -->
         <div id="termsScreen" class="screen active">
             <div class="terms-card">
+                
+                <!-- दसरा व दिवाळी सण शुभेच्छा बॅनर -->
+                <div class="festival-banner">
+                    <h3 style="margin: 0 0 5px 0; font-size: 1.15rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">✨ दसरा व दिवाळीच्या हार्दिक शुभेच्छा! 🪔</h3>
+                    <p style="margin: 0; font-size: 0.85rem; font-weight: bold; line-height: 1.4;">
+                        रॉयल मॉल बास्केट परिवाराकडून आपणास व आपल्या कुटुंबास सुख-समृद्धी लाभो!
+                    </p>
+                </div>
+
                 <h2 id="tHeading">नियम आणि अटी (Terms & Conditions)</h2>
                 <ul class="terms-list" id="tList">
                     <li><strong>किमान ऑर्डर मर्यादा:</strong> किमान ५०० रुपयांच्या वरच सामान ऑर्डर करणे अनिवार्य आहे.</li>
