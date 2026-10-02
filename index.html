@@ -227,13 +227,10 @@
         };
 
         const products = [
-            // तांदूळ (नवीन दर व पॅकेजेस)
             { id: 1, nameMr: "दावत तांदूळ (१० किलो)", nameEn: "Daawat Rice (10 kg)", price: 760, img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&auto=format&fit=crop&q=60" },
             { id: 2, nameMr: "दावत तांदूळ (५ किलो)", nameEn: "Daawat Rice (5 kg)", price: 365, img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&auto=format&fit=crop&q=60" },
             { id: 3, nameMr: "दावत तांदूळ (१० किलो - पर्याय २)", nameEn: "Daawat Rice (10 kg - Option 2)", price: 690, img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&auto=format&fit=crop&q=60" },
             { id: 4, nameMr: "दावत तांदूळ (५ किलो - पर्याय २)", nameEn: "Daawat Rice (5 kg - Option 2)", price: 470, img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&auto=format&fit=crop&q=60" },
-
-            // खाद्य तेल (नवीन दर)
             { id: 5, nameMr: "किर्ती गोल्ड तेल", nameEn: "Kirti Gold Oil", price: 179, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300&auto=format&fit=crop&q=60" },
             { id: 6, nameMr: "जेमीनी सोयाबीन तेल", nameEn: "Gemini Soybean Oil", price: 165, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300&auto=format&fit=crop&q=60" },
             { id: 7, nameMr: "सनी सनलाइट सनफ्लॉवर तेल", nameEn: "Sunny Sunlight Sunflower Oil", price: 192, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300&auto=format&fit=crop&q=60" },
@@ -241,8 +238,6 @@
             { id: 9, nameMr: "स्टार सरकी तेल", nameEn: "Star Cottonseed Oil", price: 176, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300&auto=format&fit=crop&q=60" },
             { id: 10, nameMr: "चक दे कॉटनसीड तेल", nameEn: "Chak De Cottonseed Oil", price: 190, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300&auto=format&fit=crop&q=60" },
             { id: 11, nameMr: "चक दे सोयाबीन तेल", nameEn: "Chak De Soybean Oil", price: 176, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300&auto=format&fit=crop&q=60" },
-
-            // इतर सर्व मूळ जिन्नस व १ किलोचे तांदूळ/डाळी
             { id: 12, nameMr: "पिसाळी हरभरा डाळ (प्रति किलो)", nameEn: "Split Chana Dal (per kg)", price: 94, img: "https://images.unsplash.com/photo-1585996739912-91629853907c?w=300&auto=format&fit=crop&q=60" },
             { id: 13, nameMr: "उडीद डाळ (प्रति किलो)", nameEn: "Urad Dal (per kg)", price: 138, img: "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=300&auto=format&fit=crop&q=60" },
             { id: 14, nameMr: "मुग (प्रति किलो)", nameEn: "Moong (per kg)", price: 110, img: "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?w=300&auto=format&fit=crop&q=60" },
@@ -402,17 +397,22 @@
 
             let distance = parseFloat(document.getElementById('distanceKm').value) || 0;
             let deliveryCharge = distance * 8;
-            let grandTotal = subtotal + deliveryCharge;
+            
+            // प्रत्येक ५०० रुपयांच्या खरेदीवर १५ रुपये अतिरिक्त चार्ज जोडण्याचे लॉजिक
+            let extraCharge = Math.floor(subtotal / 500) * 15;
+
+            let grandTotal = subtotal + deliveryCharge + extraCharge;
 
             summaryHTML += `
                 <div style="margin-top:10px; border-top:1px solid #ddd; padding-top:8px;">
                     <div class="bill-row"><span>${currentLang === 'en' ? 'Items Subtotal:' : 'मालाची एकूण किंमत:'}</span><span>Rs. ${subtotal}</span></div>
                     <div class="bill-row"><span>${currentLang === 'en' ? 'Delivery Charge ('+distance+' km):' : 'डिलिव्हरी चार्ज ('+distance+' किमी):'}</span><span>Rs. ${deliveryCharge}</span></div>
+                    <div class="bill-row"><span>${currentLang === 'en' ? 'Extra Shopping Charge:' : 'अतिरिक्त खरेदी चार्ज (प्रत्येक ५०० ला १५):'}</span><span>Rs. ${extraCharge}</span></div>
                     <div class="bill-row bill-total"><span>${currentLang === 'en' ? 'Grand Total:' : 'एकूण अंतिम बिल:'}</span><span>Rs. ${grandTotal}</span></div>
                 </div>
             `;
             document.getElementById('billSummaryContainer').innerHTML = summaryHTML;
-            return { subtotal, deliveryCharge, grandTotal };
+            return { subtotal, deliveryCharge, extraCharge, grandTotal };
         }
 
         function getLocationGPS() {
@@ -457,7 +457,7 @@
             if(gpsLocationLink) msg += `🗺️ *GPS Link:* ${gpsLocationLink}\n`;
             msg += `🛣️ *Distance / अंतर:* ${distance} km\n`;
             msg += `💳 *Payment / पेमेंट प्रकार:* ${payMethod}\n\n`;
-            msg += `🛍️️ *Items / ऑर्डर केलेले जिन्नस:*\n`;
+            msg += `🛍 *Items / ऑर्डर केलेले जिन्नस:*\n`;
 
             for(let id in cart) {
                 if(cart[id] > 0) {
@@ -469,6 +469,7 @@
 
             msg += `\n💰 *Subtotal / मालाची किंमत:* Rs. ${bill.subtotal}\n`;
             msg += `🚚 *Delivery / डिलिव्हरी चार्ज:* Rs. ${bill.deliveryCharge}\n`;
+            msg += `⚡ *Extra Charge / अतिरिक्त चार्ज:* Rs. ${bill.extraCharge}\n`;
             msg += `🔥 *Total Bill / एकूण अंतिम बिल:* Rs. ${bill.grandTotal}\n`;
 
             let ownerWhatsAppNumber = "919975401708";
