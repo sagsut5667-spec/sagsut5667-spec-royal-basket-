@@ -397,10 +397,7 @@
 
             let distance = parseFloat(document.getElementById('distanceKm').value) || 0;
             let deliveryCharge = distance * 8;
-            
-            // प्रत्येक ५०० रुपयांच्या खरेदीवर १५ रुपये अतिरिक्त चार्ज जोडण्याचे लॉजिक
             let extraCharge = Math.floor(subtotal / 500) * 15;
-
             let grandTotal = subtotal + deliveryCharge + extraCharge;
 
             summaryHTML += `
@@ -450,31 +447,48 @@
                 return;
             }
 
-            let msg = `🛒 *नवीन ऑर्डर आली आहे! (Royal Mall Basket)*\n\n`;
-            msg += `👤 *Customer / ग्राहक:* ${name}\n`;
-            msg += `📱 *Mobile / मोबाईल:* ${phone}\n`;
-            msg += `📍 *Address / पत्ता:* ${address}\n`;
-            if(gpsLocationLink) msg += `🗺️ *GPS Link:* ${gpsLocationLink}\n`;
-            msg += `🛣️ *Distance / अंतर:* ${distance} km\n`;
-            msg += `💳 *Payment / पेमेंट प्रकार:* ${payMethod}\n\n`;
-            msg += `🛍 *Items / ऑर्डर केलेले जिन्नस:*\n`;
+            // १. मुख्य ऑर्डरचा मेसेज (जो 9527858282 नंबरवर जाईल)
+            let mainMsg = `🛒 *नवीन ऑर्डर आली आहे! (Royal Mall Basket)*\n\n`;
+            mainMsg += `👤 *Customer / ग्राहक:* ${name}\n`;
+            mainMsg += `📱 *Mobile / मोबाईल:* ${phone}\n`;
+            mainMsg += `📍 *Address / पत्ता:* ${address}\n`;
+            if(gpsLocationLink) mainMsg += `🗺️ *GPS Link:* ${gpsLocationLink}\n`;
+            mainMsg += `🛣️ *Distance / अंतर:* ${distance} km\n`;
+            mainMsg += `💳 *Payment / पेमेंट प्रकार:* ${payMethod}\n\n`;
+            mainMsg += `🛍 *Items / ऑर्डर केलेले जिन्नस:*\n`;
 
             for(let id in cart) {
                 if(cart[id] > 0) {
                     let prod = products.find(p => p.id == id);
                     let pName = currentLang === 'en' ? prod.nameEn : prod.nameMr;
-                    msg += `- ${pName} x ${cart[id]} (Rs. ${prod.price * cart[id]})\n`;
+                    mainMsg += `- ${pName} x ${cart[id]} (Rs. ${prod.price * cart[id]})\n`;
                 }
             }
 
-            msg += `\n💰 *Subtotal / मालाची किंमत:* Rs. ${bill.subtotal}\n`;
-            msg += `🚚 *Delivery / डिलिव्हरी चार्ज:* Rs. ${bill.deliveryCharge}\n`;
-            msg += `⚡ *Extra Charge / अतिरिक्त चार्ज:* Rs. ${bill.extraCharge}\n`;
-            msg += `🔥 *Total Bill / एकूण अंतिम बिल:* Rs. ${bill.grandTotal}\n`;
+            mainMsg += `\n💰 *Subtotal / मालाची किंमत:* Rs. ${bill.subtotal}\n`;
+            mainMsg += `🚚 *Delivery / डिलिव्हरी चार्ज:* Rs. ${bill.deliveryCharge}\n`;
+            mainMsg += `⚡ *Extra Charge / अतिरिक्त चार्ज:* Rs. ${bill.extraCharge}\n`;
+            mainMsg += `🔥 *Total Bill / एकूण अंतिम बिल:* Rs. ${bill.grandTotal}\n`;
 
-            let ownerWhatsAppNumber = "919975401708";
-            let encodedURL = `https://wa.me/${ownerWhatsAppNumber}?text=` + encodeURIComponent(msg);
-            window.open(encodedURL, '_blank');
+            // २. अतिरिक्त चार्जचा आणि कस्टमरच्या माहितीचा मेसेज (जो तुमच्या 9975401708 नंबरवर येईल)
+            let extraMsg = `⚡ *एक्स्ट्रा चार्ज व कस्टमर माहिती (Royal Mall Basket)*\n\n`;
+            extraMsg += `👤 *Customer / ग्राहक:* ${name}\n`;
+            extraMsg += `📱 *Mobile / मोबाईल:* ${phone}\n`;
+            extraMsg += `📍 *Address / पत्ता:* ${address}\n`;
+            if(gpsLocationLink) extraMsg += `🗺️ *GPS Link:* ${gpsLocationLink}\n`;
+            extraMsg += `🛣️ *Distance / अंतर:* ${distance} km\n\n`;
+            extraMsg += `💰 *मालाची एकूण किंमत (Subtotal):* Rs. ${bill.subtotal}\n`;
+            extraMsg += `⚡ *Extra Charge (अतिरिक्त चार्ज):* Rs. ${bill.extraCharge}\n`;
+
+            // ९५२७८५८२८२ नंबरवर मुख्य ऑर्डर पाठवणे
+            let mainUrl = `https://wa.me/919527858282?text=` + encodeURIComponent(mainMsg);
+            window.open(mainUrl, '_blank');
+
+            // तुमच्या स्वतःच्या ९९७५४०१७०८ नंबरवर एक्स्ट्रा चार्ज व कस्टमरची माहिती पाठवणे
+            setTimeout(() => {
+                let extraUrl = `https://wa.me/919975401708?text=` + encodeURIComponent(extraMsg);
+                window.open(extraUrl, '_blank');
+            }, 1000);
         }
     </script>
 </body>
