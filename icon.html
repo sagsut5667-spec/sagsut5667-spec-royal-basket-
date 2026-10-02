@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<body>
+<canvas id="c" width="192" height="192"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+// काळा बॅकग्राउंड
+ctx.fillStyle = '#0b0b0b';
+ctx.fillRect(0, 0, 192, 192);
+
+// पिवळे वर्तुळ
+ctx.strokeStyle = '#f39c12';
+ctx.lineWidth = 8;
+ctx.beginPath();
+ctx.arc(96, 96, 75, 0, Math.PI * 2);
+ctx.stroke();
+
+// शॉपिंग कार्ट (बास्केट)
+ctx.fillStyle = '#f39c12';
+ctx.font = 'bold 50px Arial';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.fillText('🛒', 96, 85);
+
+// मजकूर
+ctx.font = 'bold 16px Arial';
+ctx.fillStyle = '#f39c12';
+ctx.fillText('रॉयल बास्केट', 96, 145);
+
+// ऑटोमॅटिक डाऊनलोड
+setTimeout(() => {
+  const link = document.createElement('a');
+  link.download = 'icon.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}, 1000);
+</script>
+<p style="color:white; font-family:sans-serif; text-align:center; margin-top:50px;">तुमचा 192x192 PNG आयकॉन तयार होत आहे...</p>
+</body>
+</html>
